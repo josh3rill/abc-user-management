@@ -6,6 +6,8 @@ port="$2"
 shift 2
 cmd="$@"
 
+echo "\033[1;33m[INFO] On first build, MySQL initialization may take 4-5 minutes. Please be patient!\033[0m"
+
 echo "Waiting for $host:$port to be ready..."
 
 until nc -z "$host" "$port"; do

@@ -41,7 +41,7 @@ func Load() *Config {
 		DBName:        getEnv("DB_NAME", "abc_users"),
 		MongoURI:      getEnv("MONGO_URI", "mongodb://localhost:27017/abc_users"),
 		JWTSecret:     getEnv("JWT_SECRET", "default-secret-change-this"),
-		RedisHost:     getEnv("REDIS_HOST", "localhost"),
+		RedisHost:     getEnv("REDIS_HOST", "redis"),
 		RedisPort:     getEnv("REDIS_PORT", "6379"),
 		RedisPassword: getEnv("REDIS_PASSWORD", ""),
 		RabbitMQURL:   getEnv("RABBITMQ_URL", "amqp://admin:admin@localhost:5672/"),
