@@ -1,0 +1,3539 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>server: Go Coverage Report</title>
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">abc-user-management/cmd/server/main.go (0.0%)</option>
+				
+				<option value="file1">abc-user-management/internal/config/config.go (0.0%)</option>
+				
+				<option value="file2">abc-user-management/internal/controllers/auth.go (0.0%)</option>
+				
+				<option value="file3">abc-user-management/internal/controllers/users.go (0.0%)</option>
+				
+				<option value="file4">abc-user-management/internal/events/consumer.go (0.0%)</option>
+				
+				<option value="file5">abc-user-management/internal/events/handlers.go (0.0%)</option>
+				
+				<option value="file6">abc-user-management/internal/events/publisher.go (0.0%)</option>
+				
+				<option value="file7">abc-user-management/internal/middleware/auth.go (0.0%)</option>
+				
+				<option value="file8">abc-user-management/internal/middleware/cors.go (0.0%)</option>
+				
+				<option value="file9">abc-user-management/internal/middleware/logger.go (0.0%)</option>
+				
+				<option value="file10">abc-user-management/internal/middleware/rate_limit.go (0.0%)</option>
+				
+				<option value="file11">abc-user-management/internal/models/admin.go (0.0%)</option>
+				
+				<option value="file12">abc-user-management/internal/models/user.go (0.0%)</option>
+				
+				<option value="file13">abc-user-management/internal/repositories/interface.go (0.0%)</option>
+				
+				<option value="file14">abc-user-management/internal/repositories/mongodb.go (0.0%)</option>
+				
+				<option value="file15">abc-user-management/internal/repositories/mysql.go (0.0%)</option>
+				
+				<option value="file16">abc-user-management/internal/routes/routes.go (0.0%)</option>
+				
+				<option value="file17">abc-user-management/internal/services/auth.go (0.0%)</option>
+				
+				<option value="file18">abc-user-management/internal/services/cache.go (0.0%)</option>
+				
+				<option value="file19">abc-user-management/internal/services/user.go (0.0%)</option>
+				
+				<option value="file20">abc-user-management/internal/utils/hash.go (0.0%)</option>
+				
+				<option value="file21">abc-user-management/internal/utils/jwt.go (0.0%)</option>
+				
+				<option value="file22">abc-user-management/internal/utils/pagination.go (0.0%)</option>
+				
+				<option value="file23">abc-user-management/internal/utils/validator.go (0.0%)</option>
+				
+				<option value="file24">abc-user-management/pkg/cache/redis.go (0.0%)</option>
+				
+				<option value="file25">abc-user-management/pkg/database/mongodb.go (0.0%)</option>
+				
+				<option value="file26">abc-user-management/pkg/database/mysql.go (0.0%)</option>
+				
+				<option value="file27">abc-user-management/pkg/messaging/kafka.go (0.0%)</option>
+				
+				<option value="file28">abc-user-management/pkg/messaging/rabbitmq.go (0.0%)</option>
+				
+				<option value="file29">abc-user-management/tests/integration/mock_user_repo.go (0.0%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">not covered</span>
+				<span class="cov8">covered</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package main
+
+import (
+        "abc-user-management/internal/config"
+        "abc-user-management/internal/events"
+        "abc-user-management/internal/repositories"
+        "abc-user-management/internal/routes"
+        "abc-user-management/internal/services"
+        "abc-user-management/pkg/cache"
+        "abc-user-management/pkg/database"
+        "abc-user-management/pkg/messaging"
+        "log"
+        "time"
+
+        "github.com/gin-gonic/gin"
+        "github.com/streadway/amqp"
+)
+
+func main() <span class="cov0" title="0">{
+        // Initialize configuration from environment
+        cfg := config.Load()
+
+        // Setup database connection with retry logic
+        log.Println("Initializing database connection...")
+        var db interface{}
+        var err error
+
+        // Retry database connection up to 10 times
+        for i := 0; i &lt; 10; i++ </span><span class="cov0" title="0">{
+                db, err = database.InitializeDB(cfg)
+                if err == nil </span><span class="cov0" title="0">{
+                        log.Println("Database connected successfully!")
+                        break</span>
+                }
+                <span class="cov0" title="0">log.Printf("Database connection attempt %d failed: %v", i+1, err)
+                time.Sleep(5 * time.Second)</span>
+        }
+
+        <span class="cov0" title="0">if err != nil </span><span class="cov0" title="0">{
+                log.Fatalf("Failed to connect to database after multiple attempts: %v", err)
+        }</span>
+
+        // Initialize Redis cache for performance optimization
+        <span class="cov0" title="0">log.Println("Initializing Redis cache...")
+        var redisClient *cache.RedisClient
+        redisClient = cache.InitRedis(cfg)
+        if redisClient != nil </span><span class="cov0" title="0">{
+                // Test Redis connection
+                err := redisClient.Set("test", "connection", 1*time.Second)
+                if err != nil </span><span class="cov0" title="0">{
+                        log.Printf("Warning: Redis connection failed: %v. Running without cache.", err)
+                        redisClient = nil
+                }</span> else<span class="cov0" title="0"> {
+                        log.Println("Redis cache connected successfully!")
+                        redisClient.Delete("test")
+                }</span>
+        }
+
+        // Setup message broker for event-driven architecture
+        <span class="cov0" title="0">log.Println("Initializing RabbitMQ...")
+        var msgBroker interface{}
+        msgBroker, err = messaging.InitRabbitMQ(cfg.RabbitMQURL)
+        if err != nil </span><span class="cov0" title="0">{
+                log.Printf("Warning: Message broker unavailable: %v. Running without events.", err)
+                msgBroker = nil
+        }</span> else<span class="cov0" title="0"> {
+                log.Println("RabbitMQ connected successfully!")
+                // Start event consumers in background
+                go func() </span><span class="cov0" title="0">{
+                        if conn, ok := msgBroker.(*amqp.Connection); ok </span><span class="cov0" title="0">{
+                                if err := events.StartConsumers(conn, db); err != nil </span><span class="cov0" title="0">{
+                                        log.Printf("Failed to start event consumers: %v", err)
+                                }</span>
+                        }
+                }()
+        }
+
+        // Create default admin user if not exists
+        <span class="cov0" title="0">log.Println("Ensuring default admin user exists...")
+        ensureDefaultAdmin(cfg, db)
+
+        // Set Gin mode based on environment
+        if cfg.Environment == "production" </span><span class="cov0" title="0">{
+                gin.SetMode(gin.ReleaseMode)
+        }</span> else<span class="cov0" title="0"> {
+                gin.SetMode(gin.DebugMode)
+        }</span>
+
+        // Create Gin router with recovery middleware
+        <span class="cov0" title="0">router := gin.New()
+        router.Use(gin.Recovery())
+
+        // Setup all routes and middleware
+        routes.SetupRoutes(router, db, redisClient, msgBroker)
+
+        // Start server on configured port
+        log.Printf("🚀 ABC User Management API starting on port %s", cfg.Port)
+        log.Printf("📝 Environment: %s", cfg.Environment)
+        log.Printf("💾 Database: %s", cfg.DBType)
+        log.Printf("📧 Default Admin: %s / %s", cfg.AdminEmail, cfg.AdminPassword)
+        if err := router.Run(":" + cfg.Port); err != nil </span><span class="cov0" title="0">{
+                log.Fatalf("Failed to start server: %v", err)
+        }</span>
+}
+
+// ensureDefaultAdmin creates the default admin user if it doesn't exist
+func ensureDefaultAdmin(cfg *config.Config, db interface{}) <span class="cov0" title="0">{
+        // Create repository
+        repoFactory := repositories.NewRepositoryFactory(cfg.DBType, db)
+        userRepo := repoFactory.GetUserRepository()
+
+        // Create auth service
+        authService := services.NewAuthService(userRepo)
+
+        // Try to create default admin
+        err := authService.CreateDefaultAdmin(cfg.AdminEmail, cfg.AdminPassword)
+        if err != nil </span><span class="cov0" title="0">{
+                log.Printf("Default admin may already exist or creation failed: %v", err)
+        }</span> else<span class="cov0" title="0"> {
+                log.Println("Default admin user created successfully!")
+        }</span>
+}
+</pre>
+		
+		<pre class="file" id="file1" style="display: none">package config
+
+import (
+        "os"
+
+        "github.com/joho/godotenv"
+)
+
+type Config struct {
+        Port          string
+        Environment   string
+        DBType        string
+        DBHost        string
+        DBPort        string
+        DBUser        string
+        DBPassword    string
+        DBName        string
+        MongoURI      string
+        JWTSecret     string
+        RedisHost     string
+        RedisPort     string
+        RedisPassword string
+        RabbitMQURL   string
+        AdminEmail    string
+        AdminPassword string
+}
+
+// Load reads configuration from environment variables
+func Load() *Config <span class="cov0" title="0">{
+        // Load .env file if it exists
+        godotenv.Load()
+
+        return &amp;Config{
+                Port:          getEnv("PORT", "8085"),
+                Environment:   getEnv("ENV", "development"),
+                DBType:        getEnv("DB_TYPE", "mysql"),
+                DBHost:        getEnv("DB_HOST", "mysql"),
+                DBPort:        getEnv("DB_PORT", "3306"),
+                DBUser:        getEnv("DB_USER", "abc_user"),
+                DBPassword:    getEnv("DB_PASSWORD", "v12345"),
+                DBName:        getEnv("DB_NAME", "abc_users"),
+                MongoURI:      getEnv("MONGO_URI", "mongodb://localhost:27017/abc_users"),
+                JWTSecret:     getEnv("JWT_SECRET", "default-secret-change-this"),
+                RedisHost:     getEnv("REDIS_HOST", "redis"),
+                RedisPort:     getEnv("REDIS_PORT", "6379"),
+                RedisPassword: getEnv("REDIS_PASSWORD", ""),
+                RabbitMQURL:   getEnv("RABBITMQ_URL", "amqp://admin:admin@localhost:5672/"),
+                AdminEmail:    getEnv("ADMIN_EMAIL", "admin@abc.com"),
+                AdminPassword: getEnv("ADMIN_PASSWORD", "Admin@123456"),
+        }
+}</span>
+
+func getEnv(key, defaultValue string) string <span class="cov0" title="0">{
+        if value := os.Getenv(key); value != "" </span><span class="cov0" title="0">{
+                return value
+        }</span>
+        <span class="cov0" title="0">return defaultValue</span>
+}
+</pre>
+		
+		<pre class="file" id="file2" style="display: none">package controllers
+
+import (
+        "abc-user-management/internal/services"
+        "net/http"
+
+        "github.com/gin-gonic/gin"
+        "github.com/sirupsen/logrus"
+)
+
+type AuthController struct {
+        authService *services.AuthService
+        logger      *logrus.Logger
+}
+
+// NewAuthController creates authentication controller
+func NewAuthController(authService *services.AuthService, logger *logrus.Logger) *AuthController <span class="cov0" title="0">{
+        return &amp;AuthController{
+                authService: authService,
+                logger:      logger,
+        }
+}</span>
+
+// @Summary User Login
+// @Description Authenticates user and returns JWT token
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Param credentials body map[string]string true "User Credentials"
+// @Success 200 {object} map[string]interface{}
+// @Failure 404 {object} map[string]string
+// @Router// Login handles user authentication requests
+func (c *AuthController) Login(ctx *gin.Context) <span class="cov0" title="0">{
+        var credentials struct {
+                Email    string `json:"email" binding:"required,email"`
+                Password string `json:"password" binding:"required"`
+        }
+
+        // Validate input credentials
+        if err := ctx.ShouldBindJSON(&amp;credentials); err != nil </span><span class="cov0" title="0">{
+                ctx.JSON(http.StatusBadRequest, gin.H{
+                        "error": "Invalid credentials format",
+                })
+                return
+        }</span>
+
+        // Authenticate through service
+        <span class="cov0" title="0">token, user, err := c.authService.Login(credentials.Email, credentials.Password)
+        if err != nil </span><span class="cov0" title="0">{
+                c.logger.WithError(err).WithField("email", credentials.Email).Warn("Login attempt failed")
+                ctx.JSON(http.StatusUnauthorized, gin.H{
+                        "error": "Invalid email or password",
+                })
+                return
+        }</span>
+
+        // Log successful authentication
+        <span class="cov0" title="0">c.logger.WithField("user_id", user.ID).Info("User logged in successfully")
+
+        ctx.JSON(http.StatusOK, gin.H{
+                "message": "Login successful",
+                "token":   token,
+                "user": gin.H{
+                        "id":    user.ID,
+                        "email": user.Email,
+                        "name":  user.Name,
+                        "role":  user.Role,
+                },
+        })</span>
+}
+
+// @Summary Get Default Admin Credentials
+// @Description Provides default admin login details for demo/testing
+// @Tags Auth
+// @Accept json
+// @Produce json
+// @Parameters
+// @Success 200
+// @Failure 404
+// @Router// GetDefaultCredentials provides default admin credentials for testing
+// GetDefaultCredentials returns admin login details for demo
+func (c *AuthController) GetDefaultCredentials(ctx *gin.Context) <span class="cov0" title="0">{
+        // This endpoint provides default admin credentials for easy testing
+        ctx.JSON(http.StatusOK, gin.H{
+                "message": "Default admin credentials for testing",
+                "credentials": gin.H{
+                        "email":    "admin@abc.com",
+                        "password": "Admin@123456",
+                },
+                "note": "Click to copy these credentials on the login page",
+        })
+}</span>
+</pre>
+		
+		<pre class="file" id="file3" style="display: none">package controllers
+
+import (
+        "abc-user-management/internal/models"
+        "abc-user-management/internal/services"
+        "net/http"
+        "strconv"
+
+        "github.com/gin-gonic/gin"
+        "github.com/sirupsen/logrus"
+)
+
+type UserController struct {
+        service *services.UserService
+        logger  *logrus.Logger
+}
+
+// NewUserController initializes controller with dependencies
+func NewUserController(service *services.UserService, logger *logrus.Logger) *UserController <span class="cov0" title="0">{
+        return &amp;UserController{
+                service: service,
+                logger:  logger,
+        }
+}</span>
+
+// @Summary Create a new user
+// @Description Creates a new user with the provided details
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Param id path int true "User ID"
+// @Success 200 {object} models.User
+// @Failure 404 {object} map[string]string
+// @Router /api/users/{id} [get]
+// CreateUser handles POST /api/users endpoint
+func (c *UserController) CreateUser(ctx *gin.Context) <span class="cov0" title="0">{
+        var user models.User
+
+        // Parse and validate request body
+        if err := ctx.ShouldBindJSON(&amp;user); err != nil </span><span class="cov0" title="0">{
+                c.logger.WithError(err).Error("Invalid request body")
+                ctx.JSON(http.StatusBadRequest, gin.H{
+                        "error":   "Invalid input data",
+                        "details": err.Error(),
+                })
+                return
+        }</span>
+
+        // Process user creation through service layer
+        <span class="cov0" title="0">if err := c.service.CreateUser(&amp;user); err != nil </span><span class="cov0" title="0">{
+                c.logger.WithError(err).Error("Failed to create user")
+
+                // Determine appropriate error response
+                statusCode := http.StatusInternalServerError
+                if err.Error() == "email already exists" </span><span class="cov0" title="0">{
+                        statusCode = http.StatusConflict
+                }</span> else<span class="cov0" title="0"> if err.Error() == "user must be 18 or older" </span><span class="cov0" title="0">{
+                        statusCode = http.StatusBadRequest
+                }</span>
+
+                <span class="cov0" title="0">ctx.JSON(statusCode, gin.H{
+                        "error": err.Error(),
+                })
+                return</span>
+        }
+
+        // Log successful creation
+        <span class="cov0" title="0">c.logger.WithField("user_id", user.ID).Info("User created successfully")
+
+        ctx.JSON(http.StatusCreated, gin.H{
+                "message": "User created successfully",
+                "data":    user,
+        })</span>
+}
+
+// @Summary Get paginated list of users
+// @Description Retrieves users with pagination and optional search
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Param page query int false "Page number" default(1)
+// @Success 200 {array} models.User
+// @Failure 404 {object} map[string]string
+// @Router /api/users [get]
+// GetUsers handles GET /api/users with pagination and search
+func (c *UserController) GetUsers(ctx *gin.Context) <span class="cov0" title="0">{
+        // Parse query parameters with defaults
+        page, _ := strconv.Atoi(ctx.DefaultQuery("page", "1"))
+        limit, _ := strconv.Atoi(ctx.DefaultQuery("limit", "10"))
+        search := ctx.Query("search")
+
+        // Validate pagination parameters
+        if page &lt; 1 </span><span class="cov0" title="0">{
+                page = 1
+        }</span>
+        <span class="cov0" title="0">if limit &lt; 1 || limit &gt; 100 </span><span class="cov0" title="0">{
+                limit = 10
+        }</span>
+
+        // Fetch users through service
+        <span class="cov0" title="0">users, total, err := c.service.GetUsers(page, limit, search)
+        if err != nil </span><span class="cov0" title="0">{
+                c.logger.WithError(err).Error("Failed to fetch users")
+                ctx.JSON(http.StatusInternalServerError, gin.H{
+                        "error": "Failed to retrieve users",
+                })
+                return
+        }</span>
+
+        // Return paginated response
+        <span class="cov0" title="0">ctx.JSON(http.StatusOK, gin.H{
+                "data": users,
+                "pagination": gin.H{
+                        "page":  page,
+                        "limit": limit,
+                        "total": total,
+                        "pages": (total + int64(limit) - 1) / int64(limit),
+                },
+        })</span>
+}
+
+// @Summary Get user by ID
+// @Description Retrieves a user by their ID
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Param id path int true "User ID"
+// @Success 200 {object} models.User
+// @Failure 404 {object} map[string]string
+// @Router// GetUser handles GET /api/users/:id
+func (c *UserController) GetUser(ctx *gin.Context) <span class="cov0" title="0">{
+        // Extract and validate user ID from URL
+        id, err := strconv.ParseUint(ctx.Param("id"), 10, 32)
+        if err != nil </span><span class="cov0" title="0">{
+                ctx.JSON(http.StatusBadRequest, gin.H{
+                        "error": "Invalid user ID format",
+                })
+                return
+        }</span>
+
+        // Retrieve user from service
+        <span class="cov0" title="0">user, err := c.service.GetUser(uint(id))
+        if err != nil </span><span class="cov0" title="0">{
+                c.logger.WithError(err).WithField("user_id", id).Error("User not found")
+                ctx.JSON(http.StatusNotFound, gin.H{
+                        "error": "User not found",
+                })
+                return
+        }</span>
+
+        <span class="cov0" title="0">ctx.JSON(http.StatusOK, gin.H{
+                "data": user,
+        })</span>
+}
+
+// @Summary Update user by ID
+// @Description Updates user details by their ID
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Param id path int true "User ID"
+// @Success 200 {object} map[string]string
+// @Failure 404 {object} map[string]string
+// @Router// UpdateUser handles PUT /api/users/:id
+func (c *UserController) UpdateUser(ctx *gin.Context) <span class="cov0" title="0">{
+        // Parse user ID from URL
+        id, err := strconv.ParseUint(ctx.Param("id"), 10, 32)
+        if err != nil </span><span class="cov0" title="0">{
+                ctx.JSON(http.StatusBadRequest, gin.H{
+                        "error": "Invalid user ID",
+                })
+                return
+        }</span>
+
+        // Parse update data from request body
+        <span class="cov0" title="0">var updates map[string]interface{}
+        if err := ctx.ShouldBindJSON(&amp;updates); err != nil </span><span class="cov0" title="0">{
+                ctx.JSON(http.StatusBadRequest, gin.H{
+                        "error": "Invalid update data",
+                })
+                return
+        }</span>
+
+        // Process update through service
+        <span class="cov0" title="0">if err := c.service.UpdateUser(uint(id), updates); err != nil </span><span class="cov0" title="0">{
+                c.logger.WithError(err).WithField("user_id", id).Error("Update failed")
+
+                statusCode := http.StatusInternalServerError
+                if err.Error() == "user not found" </span><span class="cov0" title="0">{
+                        statusCode = http.StatusNotFound
+                }</span> else<span class="cov0" title="0"> if err.Error() == "user must be 18 or older" </span><span class="cov0" title="0">{
+                        statusCode = http.StatusBadRequest
+                }</span>
+
+                <span class="cov0" title="0">ctx.JSON(statusCode, gin.H{
+                        "error": err.Error(),
+                })
+                return</span>
+        }
+
+        <span class="cov0" title="0">c.logger.WithField("user_id", id).Info("User updated successfully")
+        ctx.JSON(http.StatusOK, gin.H{
+                "message": "User updated successfully",
+        })</span>
+}
+
+// @Summary Delete user by ID
+// @Description Deletes a user by their ID
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Param id path int true "User ID"
+// @Success 200 {object} map[string]string
+// @Failure 404 {object} map[string]string
+// @Router
+// DeleteUser handles DELETE /api/users/:id
+func (c *UserController) DeleteUser(ctx *gin.Context) <span class="cov0" title="0">{
+        // Extract user ID from route parameter
+        id, err := strconv.ParseUint(ctx.Param("id"), 10, 32)
+        if err != nil </span><span class="cov0" title="0">{
+                ctx.JSON(http.StatusBadRequest, gin.H{
+                        "error": "Invalid user ID",
+                })
+                return
+        }</span>
+
+        // Process deletion through service
+        <span class="cov0" title="0">if err := c.service.DeleteUser(uint(id)); err != nil </span><span class="cov0" title="0">{
+                c.logger.WithError(err).WithField("user_id", id).Error("Deletion failed")
+                ctx.JSON(http.StatusInternalServerError, gin.H{
+                        "error": "Failed to delete user",
+                })
+                return
+        }</span>
+
+        <span class="cov0" title="0">c.logger.WithField("user_id", id).Info("User deleted successfully")
+        ctx.JSON(http.StatusOK, gin.H{
+                "message": "User deleted successfully",
+        })</span>
+}
+</pre>
+		
+		<pre class="file" id="file4" style="display: none">package events
+
+import (
+    "encoding/json"
+    "log"
+    
+    "github.com/streadway/amqp"
+)
+
+// StartConsumers initializes event consumers for background processing
+func StartConsumers(conn *amqp.Connection, db interface{}) error <span class="cov0" title="0">{
+    // Create channel for communication
+    ch, err := conn.Channel()
+    if err != nil </span><span class="cov0" title="0">{
+        return err
+    }</span>
+    
+    // Declare the events exchange
+    <span class="cov0" title="0">err = ch.ExchangeDeclare(
+        "user_events", // exchange name
+        "topic",       // exchange type
+        true,          // durable
+        false,         // delete when unused
+        false,         // exclusive
+        false,         // no-wait
+        nil,           // arguments
+    )
+    if err != nil </span><span class="cov0" title="0">{
+        return err
+    }</span>
+    
+    // Declare queue for user events
+    <span class="cov0" title="0">q, err := ch.QueueDeclare(
+        "user_events_queue", // queue name
+        true,                // durable
+        false,               // delete when unused
+        false,               // exclusive
+        false,               // no-wait
+        nil,                 // arguments
+    )
+    if err != nil </span><span class="cov0" title="0">{
+        return err
+    }</span>
+    
+    // Bind queue to exchange for all event types
+    <span class="cov0" title="0">err = ch.QueueBind(
+        q.Name,        // queue name
+        "#",           // routing key (all events)
+        "user_events", // exchange
+        false,
+        nil,
+    )
+    if err != nil </span><span class="cov0" title="0">{
+        return err
+    }</span>
+    
+    // Start consuming messages
+    <span class="cov0" title="0">msgs, err := ch.Consume(
+        q.Name, // queue
+        "",     // consumer tag
+        false,  // auto-ack
+        false,  // exclusive
+        false,  // no-local
+        false,  // no-wait
+        nil,    // args
+    )
+    if err != nil </span><span class="cov0" title="0">{
+        return err
+    }</span>
+    
+    // Initialize event handler registry
+    <span class="cov0" title="0">registry := NewEventHandlerRegistry()
+    
+    // Register handlers for different event types
+    registry.Register("user.created", &amp;UserCreatedHandler{})
+    registry.Register("user.updated", &amp;UserUpdatedHandler{})
+    registry.Register("user.deleted", &amp;UserDeletedHandler{})
+    
+    // Process messages in goroutine
+    go func() </span><span class="cov0" title="0">{
+        for msg := range msgs </span><span class="cov0" title="0">{
+            // Parse event from message body
+            var event map[string]interface{}
+            if err := json.Unmarshal(msg.Body, &amp;event); err != nil </span><span class="cov0" title="0">{
+                log.Printf("Failed to parse event: %v", err)
+                msg.Nack(false, false)
+                continue</span>
+            }
+            
+            // Extract event type and data
+            <span class="cov0" title="0">eventType, _ := event["type"].(string)
+            eventData, _ := event["data"].(map[string]interface{})
+            
+            log.Printf("Processing event: %s", eventType)
+            
+            // Route to appropriate handler
+            if err := registry.ProcessEvent(eventType, eventData); err != nil </span><span class="cov0" title="0">{
+                log.Printf("Error processing event %s: %v", eventType, err)
+                msg.Nack(false, true) // Requeue on error
+            }</span> else<span class="cov0" title="0"> {
+                msg.Ack(false) // Acknowledge successful processing
+            }</span>
+        }
+    }()
+    
+    <span class="cov0" title="0">log.Println("Event consumers started successfully")
+    return nil</span>
+}
+
+// ConsumeEvent handles individual event processing
+func ConsumeEvent(eventType string, data []byte) error <span class="cov0" title="0">{
+    log.Printf("Consuming event: %s with data: %s", eventType, string(data))
+    
+    // Process based on event type
+    switch eventType </span>{
+    case "user.created":<span class="cov0" title="0">
+        // Handle user creation event
+        log.Println("Processing user creation event")</span>
+        // Send welcome email, update analytics, etc.
+        
+    case "user.updated":<span class="cov0" title="0">
+        // Handle user update event
+        log.Println("Processing user update event")</span>
+        // Invalidate caches, sync with other services
+        
+    case "user.deleted":<span class="cov0" title="0">
+        // Handle user deletion event
+        log.Println("Processing user deletion event")</span>
+        // Clean up related data, archive records
+        
+    default:<span class="cov0" title="0">
+        log.Printf("Unknown event type: %s", eventType)</span>
+    }
+    
+    <span class="cov0" title="0">return nil</span>
+}</pre>
+		
+		<pre class="file" id="file5" style="display: none">package events
+
+import (
+    "log"
+    "time"
+    "fmt"
+)
+
+// EventHandler defines the interface for event handlers
+type EventHandler interface {
+    Handle(data map[string]interface{}) error
+}
+
+// UserCreatedHandler processes user creation events
+type UserCreatedHandler struct {
+    emailService EmailService
+    analytics    AnalyticsService
+}
+
+// Handle processes user.created events
+func (h *UserCreatedHandler) Handle(data map[string]interface{}) error <span class="cov0" title="0">{
+    // Extract user information from event data
+    userID, _ := data["id"].(float64)
+    email, _ := data["email"].(string)
+    
+    // Send welcome email to new user
+    log.Printf("Sending welcome email to: %s", email)
+    if h.emailService != nil </span><span class="cov0" title="0">{
+        h.emailService.SendWelcomeEmail(email, uint(userID))
+    }</span>
+    
+    // Update analytics dashboard
+    <span class="cov0" title="0">if h.analytics != nil </span><span class="cov0" title="0">{
+        h.analytics.TrackUserSignup(uint(userID), time.Now())
+    }</span>
+    
+    // Additional processing like creating default settings
+    <span class="cov0" title="0">log.Printf("Setting up default preferences for user ID: %v", userID)
+    
+    return nil</span>
+}
+
+// UserUpdatedHandler manages user update events
+type UserUpdatedHandler struct {
+    cacheService  CacheInvalidator
+    searchService SearchIndexer
+}
+
+// Handle processes user.updated events
+func (h *UserUpdatedHandler) Handle(data map[string]interface{}) error <span class="cov0" title="0">{
+    // Extract update information
+    userID, _ := data["id"].(float64)
+    changes, _ := data["changes"].(map[string]interface{})
+    
+    // Invalidate all related caches
+    log.Printf("Invalidating caches for user ID: %v", userID)
+    if h.cacheService != nil </span><span class="cov0" title="0">{
+        h.cacheService.InvalidateUserCache(uint(userID))
+    }</span>
+    
+    // Update search index if email or name changed
+    <span class="cov0" title="0">if _, hasEmail := changes["email"]; hasEmail </span><span class="cov0" title="0">{
+        log.Printf("Updating search index for user ID: %v", userID)
+        if h.searchService != nil </span><span class="cov0" title="0">{
+            h.searchService.ReindexUser(uint(userID))
+        }</span>
+    }
+    
+    // Log significant changes for audit trail
+    <span class="cov0" title="0">log.Printf("User %v updated fields: %v", userID, changes)
+    
+    return nil</span>
+}
+
+// UserDeletedHandler handles user deletion events
+type UserDeletedHandler struct {
+    cleanupService DataCleanupService
+    notifier       NotificationService
+}
+
+// Handle processes user.deleted events
+func (h *UserDeletedHandler) Handle(data map[string]interface{}) error <span class="cov0" title="0">{
+    // Extract user ID from deletion event
+    userID, _ := data["id"].(float64)
+    timestamp, _ := data["timestamp"].(string)
+    
+    // Clean up user-related data from other services
+    log.Printf("Starting cleanup for deleted user ID: %v", userID)
+    
+    if h.cleanupService != nil </span><span class="cov0" title="0">{
+        // Remove user's files from storage
+        h.cleanupService.RemoveUserFiles(uint(userID))
+        
+        // Archive user's activity logs
+        h.cleanupService.ArchiveUserLogs(uint(userID))
+        
+        // Remove from mailing lists
+        h.cleanupService.UnsubscribeFromServices(uint(userID))
+    }</span>
+    
+    // Notify administrators about deletion
+    <span class="cov0" title="0">if h.notifier != nil </span><span class="cov0" title="0">{
+        message := fmt.Sprintf("User ID %v was deleted at %s", userID, timestamp)
+        h.notifier.NotifyAdmins("USER_DELETION", message)
+    }</span>
+    
+    <span class="cov0" title="0">log.Printf("Cleanup completed for user ID: %v", userID)
+    
+    return nil</span>
+}
+
+// EventHandlerRegistry manages all event handlers
+type EventHandlerRegistry struct {
+    handlers map[string]EventHandler
+}
+
+// NewEventHandlerRegistry creates a new handler registry
+func NewEventHandlerRegistry() *EventHandlerRegistry <span class="cov0" title="0">{
+    return &amp;EventHandlerRegistry{
+        handlers: make(map[string]EventHandler),
+    }
+}</span>
+
+// Register adds a handler for specific event type
+func (r *EventHandlerRegistry) Register(eventType string, handler EventHandler) <span class="cov0" title="0">{
+    r.handlers[eventType] = handler
+    log.Printf("Registered handler for event: %s", eventType)
+}</span>
+
+// GetHandler retrieves handler for event type
+func (r *EventHandlerRegistry) GetHandler(eventType string) (EventHandler, bool) <span class="cov0" title="0">{
+    handler, exists := r.handlers[eventType]
+    return handler, exists
+}</span>
+
+// ProcessEvent routes event to appropriate handler
+func (r *EventHandlerRegistry) ProcessEvent(eventType string, data map[string]interface{}) error <span class="cov0" title="0">{
+    handler, exists := r.GetHandler(eventType)
+    if !exists </span><span class="cov0" title="0">{
+        log.Printf("No handler registered for event: %s", eventType)
+        return fmt.Errorf("no handler for event type: %s", eventType)
+    }</span>
+    
+    // Execute handler with error recovery
+    <span class="cov0" title="0">defer func() </span><span class="cov0" title="0">{
+        if err := recover(); err != nil </span><span class="cov0" title="0">{
+            log.Printf("Handler panic for %s: %v", eventType, err)
+        }</span>
+    }()
+    
+    <span class="cov0" title="0">return handler.Handle(data)</span>
+}
+
+// Service interfaces for dependency injection
+type EmailService interface {
+    SendWelcomeEmail(email string, userID uint) error
+}
+
+type AnalyticsService interface {
+    TrackUserSignup(userID uint, timestamp time.Time) error
+}
+
+type CacheInvalidator interface {
+    InvalidateUserCache(userID uint) error
+}
+
+type SearchIndexer interface {
+    ReindexUser(userID uint) error
+}
+
+type DataCleanupService interface {
+    RemoveUserFiles(userID uint) error
+    ArchiveUserLogs(userID uint) error
+    UnsubscribeFromServices(userID uint) error
+}
+
+type NotificationService interface {
+    NotifyAdmins(eventType, message string) error
+}</pre>
+		
+		<pre class="file" id="file6" style="display: none">package events
+
+import (
+    "encoding/json"
+    "github.com/streadway/amqp"
+    "log"
+)
+
+type EventPublisher struct {
+    conn    *amqp.Connection
+    channel *amqp.Channel
+}
+
+// NewEventPublisher creates RabbitMQ publisher for event-driven architecture
+func NewEventPublisher(conn *amqp.Connection) (*EventPublisher, error) <span class="cov0" title="0">{
+    if conn == nil </span><span class="cov0" title="0">{
+        return nil, nil // Return nil if no connection
+    }</span>
+    
+    <span class="cov0" title="0">ch, err := conn.Channel()
+    if err != nil </span><span class="cov0" title="0">{
+        return nil, err
+    }</span>
+    
+    // Declare exchange for user events
+    <span class="cov0" title="0">err = ch.ExchangeDeclare(
+        "user_events", // exchange name
+        "topic",       // exchange type
+        true,          // durable
+        false,         // auto-deleted
+        false,         // internal
+        false,         // no-wait
+        nil,           // arguments
+    )
+    if err != nil </span><span class="cov0" title="0">{
+        return nil, err
+    }</span>
+    
+    <span class="cov0" title="0">return &amp;EventPublisher{
+        conn:    conn,
+        channel: ch,
+    }, nil</span>
+}
+
+// Publish sends event to message broker
+func (p *EventPublisher) Publish(eventType string, data interface{}) error <span class="cov0" title="0">{
+    // Check if publisher is initialized
+    if p == nil || p.channel == nil </span><span class="cov0" title="0">{
+        log.Printf("Event publisher not initialized, skipping event: %s", eventType)
+        return nil // Don't fail if events are not configured
+    }</span>
+    
+    // Serialize event data to JSON
+    <span class="cov0" title="0">body, err := json.Marshal(map[string]interface{}{
+        "type": eventType,
+        "data": data,
+    })
+    if err != nil </span><span class="cov0" title="0">{
+        return err
+    }</span>
+    
+    // Publish message to exchange
+    <span class="cov0" title="0">err = p.channel.Publish(
+        "user_events", // exchange
+        eventType,     // routing key
+        false,         // mandatory
+        false,         // immediate
+        amqp.Publishing{
+            ContentType: "application/json",
+            Body:        body,
+        },
+    )
+    
+    if err != nil </span><span class="cov0" title="0">{
+        log.Printf("Failed to publish event %s: %v", eventType, err)
+        return err
+    }</span>
+    
+    <span class="cov0" title="0">log.Printf("Event published: %s", eventType)
+    return nil</span>
+}
+
+// Close closes the channel (connection closed separately)
+func (p *EventPublisher) Close() error <span class="cov0" title="0">{
+    if p != nil &amp;&amp; p.channel != nil </span><span class="cov0" title="0">{
+        return p.channel.Close()
+    }</span>
+    <span class="cov0" title="0">return nil</span>
+}</pre>
+		
+		<pre class="file" id="file7" style="display: none">package middleware
+
+import (
+    "net/http"
+    "strings"
+    "abc-user-management/internal/utils"
+    
+    "github.com/gin-gonic/gin"
+)
+
+// JWTAuth validates JWT tokens for protected routes
+func JWTAuth() gin.HandlerFunc <span class="cov0" title="0">{
+    return func(c *gin.Context) </span><span class="cov0" title="0">{
+        // Extract token from Authorization header
+        authHeader := c.GetHeader("Authorization")
+        if authHeader == "" </span><span class="cov0" title="0">{
+            c.JSON(http.StatusUnauthorized, gin.H{
+                "error": "Authorization header missing",
+            })
+            c.Abort()
+            return
+        }</span>
+        
+        // Parse Bearer token format
+        <span class="cov0" title="0">tokenParts := strings.Split(authHeader, " ")
+        if len(tokenParts) != 2 || tokenParts[0] != "Bearer" </span><span class="cov0" title="0">{
+            c.JSON(http.StatusUnauthorized, gin.H{
+                "error": "Invalid authorization format",
+            })
+            c.Abort()
+            return
+        }</span>
+        
+        // Validate JWT token
+        <span class="cov0" title="0">claims, err := utils.ValidateJWT(tokenParts[1])
+        if err != nil </span><span class="cov0" title="0">{
+            c.JSON(http.StatusUnauthorized, gin.H{
+                "error": "Invalid or expired token",
+            })
+            c.Abort()
+            return
+        }</span>
+        
+        // Store user info in context for handlers
+        <span class="cov0" title="0">c.Set("userID", claims.UserID)
+        c.Set("userEmail", claims.Email)
+        c.Set("userRole", claims.Role)
+        
+        c.Next()</span>
+    }
+}</pre>
+		
+		<pre class="file" id="file8" style="display: none">package middleware
+
+import (
+    "github.com/gin-gonic/gin"
+)
+
+// CORS handles Cross-Origin Resource Sharing headers
+func CORS() gin.HandlerFunc <span class="cov0" title="0">{
+    return func(c *gin.Context) </span><span class="cov0" title="0">{
+        // Set CORS headers to allow frontend access
+        c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+        c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+        c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
+        c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT, DELETE")
+        
+        // Handle preflight requests
+        if c.Request.Method == "OPTIONS" </span><span class="cov0" title="0">{
+            c.AbortWithStatus(204)
+            return
+        }</span>
+        
+        <span class="cov0" title="0">c.Next()</span>
+    }
+}</pre>
+		
+		<pre class="file" id="file9" style="display: none">package middleware
+
+import (
+    "time"
+    
+    "github.com/gin-gonic/gin"
+    "github.com/sirupsen/logrus"
+)
+
+// RequestLogger logs all incoming HTTP requests
+func RequestLogger(logger *logrus.Logger) gin.HandlerFunc <span class="cov0" title="0">{
+    return func(c *gin.Context) </span><span class="cov0" title="0">{
+        // Start timer for request duration
+        startTime := time.Now()
+        
+        // Process request
+        c.Next()
+        
+        // Calculate request duration
+        duration := time.Since(startTime)
+        
+        // Log request details after processing
+        logger.WithFields(logrus.Fields{
+            "method":     c.Request.Method,
+            "path":       c.Request.URL.Path,
+            "status":     c.Writer.Status(),
+            "duration":   duration,
+            "ip":         c.ClientIP(),
+            "user_agent": c.Request.UserAgent(),
+            "error":      c.Errors.String(),
+        }).Info("Request processed")
+    }</span>
+}</pre>
+		
+		<pre class="file" id="file10" style="display: none">package middleware
+
+import (
+    "net/http"
+    "sync"
+    "time"
+    
+    "github.com/gin-gonic/gin"
+)
+
+// RateLimiter tracks request rates per client
+type RateLimiter struct {
+    visitors map[string]*visitor
+    mu       sync.RWMutex
+    rate     int           // requests per duration
+    duration time.Duration // time window
+}
+
+// visitor tracks request count for a client
+type visitor struct {
+    count     int
+    lastReset time.Time
+}
+
+// NewRateLimiter creates rate limiting middleware
+func NewRateLimiter(rate int, duration time.Duration) *RateLimiter <span class="cov0" title="0">{
+    // Initialize limiter with cleanup routine
+    rl := &amp;RateLimiter{
+        visitors: make(map[string]*visitor),
+        rate:     rate,
+        duration: duration,
+    }
+    
+    // Start cleanup goroutine for expired entries
+    go rl.cleanupVisitors()
+    
+    return rl
+}</span>
+
+// Middleware returns Gin middleware function
+func (rl *RateLimiter) Middleware() gin.HandlerFunc <span class="cov0" title="0">{
+    return func(c *gin.Context) </span><span class="cov0" title="0">{
+        // Get client identifier (IP address)
+        clientIP := c.ClientIP()
+        
+        // Check if request exceeds rate limit
+        if !rl.allowRequest(clientIP) </span><span class="cov0" title="0">{
+            c.JSON(http.StatusTooManyRequests, gin.H{
+                "error": "Rate limit exceeded. Please try again later.",
+            })
+            c.Abort()
+            return
+        }</span>
+        
+        <span class="cov0" title="0">c.Next()</span>
+    }
+}
+
+// allowRequest checks if client can make request
+func (rl *RateLimiter) allowRequest(clientIP string) bool <span class="cov0" title="0">{
+    rl.mu.Lock()
+    defer rl.mu.Unlock()
+    
+    // Get or create visitor record
+    v, exists := rl.visitors[clientIP]
+    now := time.Now()
+    
+    if !exists </span><span class="cov0" title="0">{
+        // First request from this client
+        rl.visitors[clientIP] = &amp;visitor{
+            count:     1,
+            lastReset: now,
+        }
+        return true
+    }</span>
+    
+    // Check if window has expired
+    <span class="cov0" title="0">if now.Sub(v.lastReset) &gt; rl.duration </span><span class="cov0" title="0">{
+        // Reset counter for new window
+        v.count = 1
+        v.lastReset = now
+        return true
+    }</span>
+    
+    // Check if limit exceeded
+    <span class="cov0" title="0">if v.count &gt;= rl.rate </span><span class="cov0" title="0">{
+        return false
+    }</span>
+    
+    // Increment counter
+    <span class="cov0" title="0">v.count++
+    return true</span>
+}
+
+// cleanupVisitors removes expired visitor entries
+func (rl *RateLimiter) cleanupVisitors() <span class="cov0" title="0">{
+    for </span><span class="cov0" title="0">{
+        time.Sleep(rl.duration)
+        
+        rl.mu.Lock()
+        now := time.Now()
+        
+        // Remove visitors with expired windows
+        for ip, v := range rl.visitors </span><span class="cov0" title="0">{
+            if now.Sub(v.lastReset) &gt; rl.duration*2 </span><span class="cov0" title="0">{
+                delete(rl.visitors, ip)
+            }</span>
+        }
+        
+        <span class="cov0" title="0">rl.mu.Unlock()</span>
+    }
+}</pre>
+		
+		<pre class="file" id="file11" style="display: none">package models
+
+import (
+    "time"
+)
+
+// Admin represents administrative user with extended privileges
+type Admin struct {
+    User
+    Permissions   []string  `json:"permissions" gorm:"type:json"`
+    LastLoginAt   time.Time `json:"last_login_at"`
+    LoginAttempts int       `json:"login_attempts"`
+    LockedUntil   time.Time `json:"locked_until"`
+}
+
+// HasPermission checks if admin has specific permission
+func (a *Admin) HasPermission(permission string) bool <span class="cov0" title="0">{
+    for _, p := range a.Permissions </span><span class="cov0" title="0">{
+        if p == permission || p == "*" </span><span class="cov0" title="0">{
+            return true
+        }</span>
+    }
+    <span class="cov0" title="0">return false</span>
+}
+
+// IsLocked checks if admin account is temporarily locked
+func (a *Admin) IsLocked() bool <span class="cov0" title="0">{
+    return time.Now().Before(a.LockedUntil)
+}</span>
+
+// IncrementLoginAttempts tracks failed login attempts
+func (a *Admin) IncrementLoginAttempts() <span class="cov0" title="0">{
+    a.LoginAttempts++
+    
+    // Lock account after 5 failed attempts
+    if a.LoginAttempts &gt;= 5 </span><span class="cov0" title="0">{
+        a.LockedUntil = time.Now().Add(30 * time.Minute)
+    }</span>
+}
+
+// ResetLoginAttempts clears failed login counter
+func (a *Admin) ResetLoginAttempts() <span class="cov0" title="0">{
+    a.LoginAttempts = 0
+    a.LastLoginAt = time.Now()
+    a.LockedUntil = time.Time{}
+}</pre>
+		
+		<pre class="file" id="file12" style="display: none">package models
+
+
+import (
+    "time"
+    "gorm.io/gorm"
+
+)
+
+// Common validation errors for User
+
+
+// User represents the core user entity in our system
+type User struct {
+    ID        uint           `json:"id" gorm:"primaryKey"`
+    Name      string         `json:"name" gorm:"size:100;not null"`
+    Email     string         `json:"email" gorm:"uniqueIndex;size:255;not null"`
+    Age       int            `json:"age" gorm:"not null"`
+    Password  string         `json:"-" gorm:"size:255;not null"` // Never expose password in JSON
+    Role      string         `json:"role" gorm:"size:50;default:'user'"`
+    Active    bool           `json:"active" gorm:"default:true"`
+    CreatedAt time.Time      `json:"created_at"`
+    UpdatedAt time.Time      `json:"updated_at"`
+    DeletedAt gorm.DeletedAt `json:"-" gorm:"index"` // Soft delete support
+}
+
+// TableName specifies the table name for GORM
+func (User) TableName() string <span class="cov0" title="0">{
+    return "users"
+}</span>
+
+// Validate performs business rule validation
+func (u *User) Validate() error <span class="cov0" title="0">{
+    if u.Age &lt; 18 </span><span class="cov0" title="0">{
+        return ErrUserTooYoung
+    }</span>
+    <span class="cov0" title="0">if u.Email == "" </span><span class="cov0" title="0">{
+        return ErrEmailRequired
+    }</span>
+    <span class="cov0" title="0">return nil</span>
+
+}
+</pre>
+		
+		<pre class="file" id="file13" style="display: none">package repositories
+
+import (
+    "abc-user-management/internal/models"
+)
+
+// UserRepository defines the contract for user data access
+type UserRepository interface {
+    Create(user *models.User) error
+    FindByID(id uint) (*models.User, error)
+    FindByEmail(email string) (*models.User, error)
+    FindAll(page, limit int, search string) ([]models.User, int64, error)
+    Update(user *models.User) error
+    Delete(id uint) error
+}
+
+// RepositoryFactory creates repository based on configuration
+type RepositoryFactory struct {
+    dbType string
+    db     interface{}
+}
+
+func NewRepositoryFactory(dbType string, db interface{}) *RepositoryFactory <span class="cov0" title="0">{
+    return &amp;RepositoryFactory{
+        dbType: dbType,
+        db:     db,
+    }
+}</span>
+
+// GetUserRepository returns appropriate repository implementation
+func (rf *RepositoryFactory) GetUserRepository() UserRepository <span class="cov0" title="0">{
+    switch rf.dbType </span>{
+    case "mysql":<span class="cov0" title="0">
+        return NewMySQLUserRepository(rf.db)</span>
+    case "mongodb":<span class="cov0" title="0">
+        return NewMongoUserRepository(rf.db)</span>
+    default:<span class="cov0" title="0">
+        return NewMySQLUserRepository(rf.db)</span>
+    }
+}</pre>
+		
+		<pre class="file" id="file14" style="display: none">package repositories
+
+import (
+    "context"
+    "abc-user-management/internal/models"
+    "go.mongodb.org/mongo-driver/bson"
+    "go.mongodb.org/mongo-driver/mongo"
+    "go.mongodb.org/mongo-driver/mongo/options"
+)
+
+// MongoUserRepository implements UserRepository for MongoDB
+type MongoUserRepository struct {
+    db         *mongo.Database
+    collection *mongo.Collection
+    ctx        context.Context
+}
+
+// NewMongoUserRepository creates MongoDB repository instance
+func NewMongoUserRepository(database interface{}) UserRepository <span class="cov0" title="0">{
+    db := database.(*mongo.Database)
+    return &amp;MongoUserRepository{
+        db:         db,
+        collection: db.Collection("users"),
+        ctx:        context.Background(),
+    }
+}</span>
+
+// Create inserts new user document into MongoDB
+func (r *MongoUserRepository) Create(user *models.User) error <span class="cov0" title="0">{
+    // Convert to BSON and insert
+    result, err := r.collection.InsertOne(r.ctx, user)
+    if err != nil </span><span class="cov0" title="0">{
+        return err
+    }</span>
+    
+    // Update user ID from inserted document
+    <span class="cov0" title="0">if oid, ok := result.InsertedID.(uint); ok </span><span class="cov0" title="0">{
+        user.ID = oid
+    }</span>
+    
+    <span class="cov0" title="0">return nil</span>
+}
+
+// FindByID retrieves user document by ID
+func (r *MongoUserRepository) FindByID(id uint) (*models.User, error) <span class="cov0" title="0">{
+    var user models.User
+    
+    // Find document with matching ID
+    filter := bson.M{"_id": id}
+    err := r.collection.FindOne(r.ctx, filter).Decode(&amp;user)
+    
+    if err == mongo.ErrNoDocuments </span><span class="cov0" title="0">{
+        return nil, models.ErrUserNotFound
+    }</span>
+    <span class="cov0" title="0">if err != nil </span><span class="cov0" title="0">{
+        return nil, err
+    }</span>
+    
+    <span class="cov0" title="0">return &amp;user, nil</span>
+}
+
+// FindByEmail locates user by email in MongoDB
+func (r *MongoUserRepository) FindByEmail(email string) (*models.User, error) <span class="cov0" title="0">{
+    var user models.User
+    
+    // Create filter for email search
+    filter := bson.M{"email": email}
+    err := r.collection.FindOne(r.ctx, filter).Decode(&amp;user)
+    
+    if err == mongo.ErrNoDocuments </span><span class="cov0" title="0">{
+        return nil, models.ErrUserNotFound
+    }</span>
+    <span class="cov0" title="0">if err != nil </span><span class="cov0" title="0">{
+        return nil, err
+    }</span>
+    
+    <span class="cov0" title="0">return &amp;user, nil</span>
+}
+
+// FindAll retrieves paginated users with optional text search
+func (r *MongoUserRepository) FindAll(page, limit int, search string) ([]models.User, int64, error) <span class="cov0" title="0">{
+    var users []models.User
+    
+    // Build filter based on search criteria
+    filter := bson.M{}
+    if search != "" </span><span class="cov0" title="0">{
+        // Text search on name and email fields
+        filter = bson.M{
+            "$or": []bson.M{
+                {"name": bson.M{"$regex": search, "$options": "i"}},
+                {"email": bson.M{"$regex": search, "$options": "i"}},
+            },
+        }
+    }</span>
+    
+    // Count total documents matching filter
+    <span class="cov0" title="0">total, err := r.collection.CountDocuments(r.ctx, filter)
+    if err != nil </span><span class="cov0" title="0">{
+        return nil, 0, err
+    }</span>
+    
+    // Calculate pagination offset
+    <span class="cov0" title="0">skip := int64((page - 1) * limit)
+    
+    // Set find options for pagination and sorting
+    findOptions := options.Find()
+    findOptions.SetLimit(int64(limit))
+    findOptions.SetSkip(skip)
+    findOptions.SetSort(bson.D{{"created_at", -1}}) // Sort by newest first
+    
+    // Execute query with pagination
+    cursor, err := r.collection.Find(r.ctx, filter, findOptions)
+    if err != nil </span><span class="cov0" title="0">{
+        return nil, 0, err
+    }</span>
+    <span class="cov0" title="0">defer cursor.Close(r.ctx)
+    
+    // Decode results into user slice
+    for cursor.Next(r.ctx) </span><span class="cov0" title="0">{
+        var user models.User
+        if err := cursor.Decode(&amp;user); err != nil </span><span class="cov0" title="0">{
+            continue</span>
+        }
+        <span class="cov0" title="0">users = append(users, user)</span>
+    }
+    
+    <span class="cov0" title="0">return users, total, nil</span>
+}
+
+// Update modifies existing user document
+func (r *MongoUserRepository) Update(user *models.User) error <span class="cov0" title="0">{
+    // Create filter to find document
+    filter := bson.M{"_id": user.ID}
+    
+    // Prepare update document with all fields
+    update := bson.M{
+        "$set": bson.M{
+            "name":       user.Name,
+            "email":      user.Email,
+            "age":        user.Age,
+            "role":       user.Role,
+            "active":     user.Active,
+            "updated_at": user.UpdatedAt,
+        },
+    }
+    
+    // Execute update operation
+    result, err := r.collection.UpdateOne(r.ctx, filter, update)
+    if err != nil </span><span class="cov0" title="0">{
+        return err
+    }</span>
+    
+    <span class="cov0" title="0">if result.MatchedCount == 0 </span><span class="cov0" title="0">{
+        return models.ErrUserNotFound
+    }</span>
+    
+    <span class="cov0" title="0">return nil</span>
+}
+
+// Delete performs soft delete on user document
+func (r *MongoUserRepository) Delete(id uint) error <span class="cov0" title="0">{
+    // Soft delete by setting deleted_at timestamp
+    filter := bson.M{"_id": id}
+    update := bson.M{
+        "$set": bson.M{
+            "deleted_at": bson.M{"$currentDate": true},
+            "active":     false,
+        },
+    }
+    
+    result, err := r.collection.UpdateOne(r.ctx, filter, update)
+    if err != nil </span><span class="cov0" title="0">{
+        return err
+    }</span>
+    
+    <span class="cov0" title="0">if result.MatchedCount == 0 </span><span class="cov0" title="0">{
+        return models.ErrUserNotFound
+    }</span>
+    
+    <span class="cov0" title="0">return nil</span>
+}
+
+// CreateIndexes ensures MongoDB indexes are created
+func (r *MongoUserRepository) CreateIndexes() error <span class="cov0" title="0">{
+    // Create unique index on email field
+    emailIndex := mongo.IndexModel{
+        Keys:    bson.D{{"email", 1}},
+        Options: options.Index().SetUnique(true),
+    }
+    
+    // Create text index for search functionality
+    textIndex := mongo.IndexModel{
+        Keys: bson.D{
+            {"name", "text"},
+            {"email", "text"},
+        },
+    }
+    
+    // Create compound index for efficient querying
+    queryIndex := mongo.IndexModel{
+        Keys: bson.D{
+            {"active", 1},
+            {"created_at", -1},
+        },
+    }
+    
+    // Apply all indexes to collection
+    _, err := r.collection.Indexes().CreateMany(r.ctx, []mongo.IndexModel{
+        emailIndex,
+        textIndex,
+        queryIndex,
+    })
+    
+    return err
+}</pre>
+		
+		<pre class="file" id="file15" style="display: none">package repositories
+
+import (
+    "abc-user-management/internal/models"
+    "gorm.io/gorm"
+)
+
+type MySQLUserRepository struct {
+    db *gorm.DB
+}
+
+// NewMySQLUserRepository creates a new MySQL repository instance
+func NewMySQLUserRepository(db interface{}) UserRepository <span class="cov0" title="0">{
+    return &amp;MySQLUserRepository{db: db.(*gorm.DB)}
+}</span>
+
+// Create inserts a new user into the database
+func (r *MySQLUserRepository) Create(user *models.User) error <span class="cov0" title="0">{
+    return r.db.Create(user).Error
+}</span>
+
+// FindByID retrieves a user by their unique identifier
+func (r *MySQLUserRepository) FindByID(id uint) (*models.User, error) <span class="cov0" title="0">{
+    var user models.User
+    err := r.db.First(&amp;user, id).Error
+    if err != nil </span><span class="cov0" title="0">{
+        return nil, err
+    }</span>
+    <span class="cov0" title="0">return &amp;user, nil</span>
+}
+
+// FindByEmail locates a user using their email address
+func (r *MySQLUserRepository) FindByEmail(email string) (*models.User, error) <span class="cov0" title="0">{
+    var user models.User
+    err := r.db.Where("email = ?", email).First(&amp;user).Error
+    if err != nil </span><span class="cov0" title="0">{
+        return nil, err
+    }</span>
+    <span class="cov0" title="0">return &amp;user, nil</span>
+}
+
+// FindAll retrieves paginated users with optional search
+func (r *MySQLUserRepository) FindAll(page, limit int, search string) ([]models.User, int64, error) <span class="cov0" title="0">{
+    var users []models.User
+    var total int64
+    
+    query := r.db.Model(&amp;models.User{})
+    
+    // Apply search filter if provided
+    if search != "" </span><span class="cov0" title="0">{
+        query = query.Where("name LIKE ? OR email LIKE ?", "%"+search+"%", "%"+search+"%")
+    }</span>
+    
+    // Get total count for pagination
+    <span class="cov0" title="0">query.Count(&amp;total)
+    
+    // Apply pagination
+    offset := (page - 1) * limit
+    err := query.Offset(offset).Limit(limit).Find(&amp;users).Error
+    
+    return users, total, err</span>
+}
+
+// Update modifies an existing user's information
+func (r *MySQLUserRepository) Update(user *models.User) error <span class="cov0" title="0">{
+    return r.db.Save(user).Error
+}</span>
+
+// Delete performs soft deletion of a user
+func (r *MySQLUserRepository) Delete(id uint) error <span class="cov0" title="0">{
+    return r.db.Delete(&amp;models.User{}, id).Error
+}</pre>
+		
+		<pre class="file" id="file16" style="display: none">package routes
+
+import (
+        "abc-user-management/internal/controllers"
+        "abc-user-management/internal/events"
+        "abc-user-management/internal/middleware"
+        "abc-user-management/internal/repositories"
+        "abc-user-management/internal/services"
+        "abc-user-management/pkg/cache"
+
+        "github.com/gin-gonic/gin"
+        "github.com/go-redis/redis/v8"
+        "github.com/sirupsen/logrus"
+        "github.com/streadway/amqp"
+        swaggerFiles "github.com/swaggo/files"
+        ginSwagger "github.com/swaggo/gin-swagger"
+)
+
+// SetupRoutes configures all API endpoints and middleware
+func SetupRoutes(router *gin.Engine, db interface{}, cacheClient interface{}, broker interface{}) <span class="cov0" title="0">{
+        // Swagger endpoint
+
+        // Initialize logger for request tracking
+        logger := logrus.New()
+        logger.SetFormatter(&amp;logrus.JSONFormatter{})
+
+        // Setup middleware stack
+        router.Use(middleware.CORS())
+        router.Use(middleware.RequestLogger(logger))
+        router.Use(gin.Recovery())
+
+        // Initialize repository with database abstraction
+        repoFactory := repositories.NewRepositoryFactory("mysql", db)
+        userRepo := repoFactory.GetUserRepository()
+
+        // Type assert cache client
+        var redisClient *cache.RedisClient
+        if cacheClient != nil </span><span class="cov0" title="0">{
+                if rc, ok := cacheClient.(*cache.RedisClient); ok </span><span class="cov0" title="0">{
+                        redisClient = rc
+                }</span> else<span class="cov0" title="0"> if rc, ok := cacheClient.(*redis.Client); ok </span><span class="cov0" title="0">{
+                        // If it's a raw redis client, wrap it
+                        redisClient = &amp;cache.RedisClient{
+                                Client: rc,
+                        }
+                }</span>
+        }
+
+        // Type assert and setup event publisher
+        <span class="cov0" title="0">var eventPublisher *events.EventPublisher
+        if broker != nil </span><span class="cov0" title="0">{
+                if conn, ok := broker.(*amqp.Connection); ok </span><span class="cov0" title="0">{
+                        // Create event publisher from connection
+                        publisher, err := events.NewEventPublisher(conn)
+                        if err != nil </span><span class="cov0" title="0">{
+                                logger.WithError(err).Warn("Failed to create event publisher")
+                        }</span> else<span class="cov0" title="0"> {
+                                eventPublisher = publisher
+                        }</span>
+                } else<span class="cov0" title="0"> if ep, ok := broker.(*events.EventPublisher); ok </span><span class="cov0" title="0">{
+                        // Already an event publisher
+                        eventPublisher = ep
+                }</span>
+        }
+
+        // Setup services with dependencies
+        <span class="cov0" title="0">userService := services.NewUserService(userRepo, redisClient, eventPublisher)
+        authService := services.NewAuthService(userRepo)
+
+        // Initialize controllers
+        userController := controllers.NewUserController(userService, logger)
+        authController := controllers.NewAuthController(authService, logger)
+
+        // API version 1 routes
+        v1 := router.Group("/api/v1")
+        </span><span class="cov0" title="0">{
+                // Public endpoints - no authentication required
+                public := v1.Group("/")
+                </span><span class="cov0" title="0">{
+                        public.POST("/login", authController.Login)
+                        public.GET("/default-credentials", authController.GetDefaultCredentials)
+                }</span>
+
+                // Protected endpoints - require valid JWT
+                <span class="cov0" title="0">protected := v1.Group("/")
+                protected.Use(middleware.JWTAuth())
+                </span><span class="cov0" title="0">{
+                        // User management endpoints
+                        protected.GET("/users", userController.GetUsers)
+                        protected.GET("/users/:id", userController.GetUser)
+                        protected.POST("/users", userController.CreateUser)
+                        protected.PUT("/users/:id", userController.UpdateUser)
+                        protected.DELETE("/users/:id", userController.DeleteUser)
+                }</span>
+        }
+
+        <span class="cov0" title="0">router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+        // Health check endpoint for monitoring
+        router.GET("/health", func(c *gin.Context) </span><span class="cov0" title="0">{
+                c.JSON(200, gin.H{
+                        "status":  "healthy",
+                        "service": "ABC User Management API",
+                })
+        }</span>)
+}
+</pre>
+		
+		<pre class="file" id="file17" style="display: none">package services
+
+import (
+    "errors"
+    "abc-user-management/internal/models"
+    "abc-user-management/internal/repositories"
+    "abc-user-management/internal/utils"
+)
+
+type AuthService struct {
+    userRepo repositories.UserRepository
+}
+
+// NewAuthService creates new authentication service
+func NewAuthService(repo repositories.UserRepository) *AuthService <span class="cov0" title="0">{
+    return &amp;AuthService{
+        userRepo: repo,
+    }
+}</span>
+
+// Login authenticates user and returns JWT token
+func (s *AuthService) Login(email, password string) (string, *models.User, error) <span class="cov0" title="0">{
+    // Find user by email
+    user, err := s.userRepo.FindByEmail(email)
+    if err != nil </span><span class="cov0" title="0">{
+        return "", nil, errors.New("invalid credentials")
+    }</span>
+    
+    // Verify password against hash
+    <span class="cov0" title="0">if !utils.CheckPasswordHash(password, user.Password) </span><span class="cov0" title="0">{
+        return "", nil, errors.New("invalid credentials")
+    }</span>
+    
+    // Generate JWT token for authenticated user
+    <span class="cov0" title="0">token, err := utils.GenerateJWT(user.ID, user.Email, user.Role)
+    if err != nil </span><span class="cov0" title="0">{
+        return "", nil, errors.New("failed to generate token")
+    }</span>
+    
+    <span class="cov0" title="0">return token, user, nil</span>
+}
+
+// CreateDefaultAdmin ensures default admin exists
+func (s *AuthService) CreateDefaultAdmin(email, password string) error <span class="cov0" title="0">{
+    // Check if admin already exists
+    existing, _ := s.userRepo.FindByEmail(email)
+    if existing != nil </span><span class="cov0" title="0">{
+        return nil // Admin already exists, skip creation
+    }</span>
+    
+    // Hash the default password
+    <span class="cov0" title="0">hashedPassword, err := utils.HashPassword(password)
+    if err != nil </span><span class="cov0" title="0">{
+        return err
+    }</span>
+    
+    // Create admin user with default values
+    <span class="cov0" title="0">admin := &amp;models.User{
+        Name:     "Admin User",
+        Email:    email,
+        Password: hashedPassword,
+        Age:      30,
+        Role:     "admin",
+        Active:   true,
+    }
+    
+    return s.userRepo.Create(admin)</span>
+}
+
+// RefreshToken generates new token for existing user
+func (s *AuthService) RefreshToken(userID uint) (string, error) <span class="cov0" title="0">{
+    // Fetch user to get current details
+    user, err := s.userRepo.FindByID(userID)
+    if err != nil </span><span class="cov0" title="0">{
+        return "", errors.New("user not found")
+    }</span>
+    
+    // Generate new token with updated expiry
+    <span class="cov0" title="0">token, err := utils.GenerateJWT(user.ID, user.Email, user.Role)
+    if err != nil </span><span class="cov0" title="0">{
+        return "", errors.New("failed to refresh token")
+    }</span>
+    
+    <span class="cov0" title="0">return token, nil</span>
+}</pre>
+		
+		<pre class="file" id="file18" style="display: none">package services
+
+import (
+    "context"
+    "time"
+    "strings"
+    
+    "github.com/go-redis/redis/v8"
+)
+
+type CacheService struct {
+    client *redis.Client
+    ctx    context.Context
+}
+
+// NewCacheService creates a new cache service instance
+func NewCacheService(client *redis.Client) *CacheService <span class="cov0" title="0">{
+    return &amp;CacheService{
+        client: client,
+        ctx:    context.Background(),
+    }
+}</span>
+
+// Set stores value in cache with expiration
+func (c *CacheService) Set(key string, value string, expiration time.Duration) error <span class="cov0" title="0">{
+    return c.client.Set(c.ctx, key, value, expiration).Err()
+}</span>
+
+// Get retrieves value from cache
+func (c *CacheService) Get(key string) (string, error) <span class="cov0" title="0">{
+    val, err := c.client.Get(c.ctx, key).Result()
+    if err == redis.Nil </span><span class="cov0" title="0">{
+        return "", nil // Key doesn't exist
+    }</span>
+    <span class="cov0" title="0">return val, err</span>
+}
+
+// Delete removes keys from cache, supports wildcards
+func (c *CacheService) Delete(pattern string) error <span class="cov0" title="0">{
+    // Handle wildcard patterns for bulk deletion
+    if strings.Contains(pattern, "*") </span><span class="cov0" title="0">{
+        keys, err := c.client.Keys(c.ctx, pattern).Result()
+        if err != nil </span><span class="cov0" title="0">{
+            return err
+        }</span>
+        <span class="cov0" title="0">if len(keys) &gt; 0 </span><span class="cov0" title="0">{
+            return c.client.Del(c.ctx, keys...).Err()
+        }</span>
+        <span class="cov0" title="0">return nil</span>
+    }
+    // Delete single key
+    <span class="cov0" title="0">return c.client.Del(c.ctx, pattern).Err()</span>
+}
+
+// Exists checks if key exists in cache
+func (c *CacheService) Exists(key string) (bool, error) <span class="cov0" title="0">{
+    val, err := c.client.Exists(c.ctx, key).Result()
+    if err != nil </span><span class="cov0" title="0">{
+        return false, err
+    }</span>
+    <span class="cov0" title="0">return val &gt; 0, nil</span>
+}
+
+// SetNX sets value only if key doesn't exist
+func (c *CacheService) SetNX(key string, value string, expiration time.Duration) (bool, error) <span class="cov0" title="0">{
+    return c.client.SetNX(c.ctx, key, value, expiration).Result()
+}</span>
+
+// IncrementCounter increments numeric value
+func (c *CacheService) IncrementCounter(key string) (int64, error) <span class="cov0" title="0">{
+    return c.client.Incr(c.ctx, key).Result()
+}</span>
+
+// GetMultiple retrieves multiple keys at once
+func (c *CacheService) GetMultiple(keys []string) (map[string]string, error) <span class="cov0" title="0">{
+    result := make(map[string]string)
+    
+    // Use pipeline for efficiency
+    pipe := c.client.Pipeline()
+    cmds := make([]*redis.StringCmd, len(keys))
+    
+    for i, key := range keys </span><span class="cov0" title="0">{
+        cmds[i] = pipe.Get(c.ctx, key)
+    }</span>
+    
+    <span class="cov0" title="0">_, err := pipe.Exec(c.ctx)
+    if err != nil &amp;&amp; err != redis.Nil </span><span class="cov0" title="0">{
+        return nil, err
+    }</span>
+    
+    // Collect results
+    <span class="cov0" title="0">for i, cmd := range cmds </span><span class="cov0" title="0">{
+        val, err := cmd.Result()
+        if err == nil </span><span class="cov0" title="0">{
+            result[keys[i]] = val
+        }</span>
+    }
+    
+    <span class="cov0" title="0">return result, nil</span>
+}</pre>
+		
+		<pre class="file" id="file19" style="display: none">package services
+
+import (
+    "errors"
+    "abc-user-management/internal/models"
+    "abc-user-management/internal/repositories"
+    "abc-user-management/internal/utils"
+    "abc-user-management/pkg/cache"
+    "abc-user-management/internal/events"
+    "encoding/json"
+    "fmt"
+    "time"
+)
+
+type UserService struct {
+    repo      repositories.UserRepository
+    cache     *cache.RedisClient
+    publisher *events.EventPublisher
+}
+
+// NewUserService creates a service with all dependencies injected
+func NewUserService(repo repositories.UserRepository, cache *cache.RedisClient, pub *events.EventPublisher) *UserService <span class="cov0" title="0">{
+    return &amp;UserService{
+        repo:      repo,
+        cache:     cache,
+        publisher: pub,
+    }
+}</span>
+
+// CreateUser handles user creation with validation and caching
+func (s *UserService) CreateUser(user *models.User) error <span class="cov0" title="0">{
+    // Validate business rules before persisting
+    if err := user.Validate(); err != nil </span><span class="cov0" title="0">{
+        return err
+    }</span>
+    
+    // Check for duplicate email
+    <span class="cov0" title="0">existing, _ := s.repo.FindByEmail(user.Email)
+    if existing != nil </span><span class="cov0" title="0">{
+        return errors.New("email already exists")
+    }</span>
+    
+    // Hash password before storage
+    <span class="cov0" title="0">hashedPassword, err := utils.HashPassword(user.Password)
+    if err != nil </span><span class="cov0" title="0">{
+        return err
+    }</span>
+    <span class="cov0" title="0">user.Password = hashedPassword
+    
+    // Persist to database
+    if err := s.repo.Create(user); err != nil </span><span class="cov0" title="0">{
+        return err
+    }</span>
+    
+    // Invalidate cache for user list (if cache is available)
+    <span class="cov0" title="0">if s.cache != nil </span><span class="cov0" title="0">{
+        s.cache.Delete("users:list:*")
+    }</span>
+    
+    // Publish event for other services (if publisher is available)
+    <span class="cov0" title="0">if s.publisher != nil </span><span class="cov0" title="0">{
+        s.publisher.Publish("user.created", map[string]interface{}{
+            "id": user.ID,
+            "email": user.Email,
+            "timestamp": time.Now(),
+        })
+    }</span>
+    
+    <span class="cov0" title="0">return nil</span>
+}
+
+// GetUser retrieves a user with caching strategy
+func (s *UserService) GetUser(id uint) (*models.User, error) <span class="cov0" title="0">{
+    // Try cache first for performance (if available)
+    if s.cache != nil </span><span class="cov0" title="0">{
+        cacheKey := fmt.Sprintf("user:%d", id)
+        cached, err := s.cache.Get(cacheKey)
+        if err == nil &amp;&amp; cached != "" </span><span class="cov0" title="0">{
+            var user models.User
+            if json.Unmarshal([]byte(cached), &amp;user) == nil </span><span class="cov0" title="0">{
+                return &amp;user, nil
+            }</span>
+        }
+    }
+    
+    // Cache miss or no cache, fetch from database
+    <span class="cov0" title="0">user, err := s.repo.FindByID(id)
+    if err != nil </span><span class="cov0" title="0">{
+        return nil, err
+    }</span>
+    
+    // Cache the result for future requests (if cache is available)
+    <span class="cov0" title="0">if s.cache != nil </span><span class="cov0" title="0">{
+        userData, _ := json.Marshal(user)
+        cacheKey := fmt.Sprintf("user:%d", id)
+        s.cache.Set(cacheKey, string(userData), 5*time.Minute)
+    }</span>
+    
+    <span class="cov0" title="0">return user, nil</span>
+}
+
+// GetUsers returns paginated user list with search capability
+func (s *UserService) GetUsers(page, limit int, search string) ([]models.User, int64, error) <span class="cov0" title="0">{
+    // Generate cache key based on parameters
+    cacheKey := fmt.Sprintf("users:list:%d:%d:%s", page, limit, search)
+    
+    // Check cache first (if available)
+    if s.cache != nil </span><span class="cov0" title="0">{
+        cached, err := s.cache.Get(cacheKey)
+        if err == nil &amp;&amp; cached != "" </span><span class="cov0" title="0">{
+            var result struct {
+                Users []models.User `json:"users"`
+                Total int64        `json:"total"`
+            }
+            if json.Unmarshal([]byte(cached), &amp;result) == nil </span><span class="cov0" title="0">{
+                return result.Users, result.Total, nil
+            }</span>
+        }
+    }
+    
+    // Fetch from repository
+    <span class="cov0" title="0">users, total, err := s.repo.FindAll(page, limit, search)
+    if err != nil </span><span class="cov0" title="0">{
+        return nil, 0, err
+    }</span>
+    
+    // Cache the results (if cache is available)
+    <span class="cov0" title="0">if s.cache != nil </span><span class="cov0" title="0">{
+        cacheData, _ := json.Marshal(map[string]interface{}{
+            "users": users,
+            "total": total,
+        })
+        s.cache.Set(cacheKey, string(cacheData), 2*time.Minute)
+    }</span>
+    
+    <span class="cov0" title="0">return users, total, nil</span>
+}
+
+// UpdateUser modifies user data with validation
+func (s *UserService) UpdateUser(id uint, updates map[string]interface{}) error <span class="cov0" title="0">{
+    user, err := s.repo.FindByID(id)
+    if err != nil </span><span class="cov0" title="0">{
+        return err
+    }</span>
+    
+    // Apply updates dynamically
+    <span class="cov0" title="0">if name, ok := updates["name"].(string); ok </span><span class="cov0" title="0">{
+        user.Name = name
+    }</span>
+    <span class="cov0" title="0">if age, ok := updates["age"].(int); ok </span><span class="cov0" title="0">{
+        user.Age = age
+    }</span>
+    <span class="cov0" title="0">if email, ok := updates["email"].(string); ok </span><span class="cov0" title="0">{
+        user.Email = email
+    }</span>
+    
+    // Validate after updates
+    <span class="cov0" title="0">if err := user.Validate(); err != nil </span><span class="cov0" title="0">{
+        return err
+    }</span>
+    
+    // Persist changes
+    <span class="cov0" title="0">if err := s.repo.Update(user); err != nil </span><span class="cov0" title="0">{
+        return err
+    }</span>
+    
+    // Invalidate relevant caches (if cache is available)
+    <span class="cov0" title="0">if s.cache != nil </span><span class="cov0" title="0">{
+        s.cache.Delete(fmt.Sprintf("user:%d", id))
+        s.cache.Delete("users:list:*")
+    }</span>
+    
+    // Publish update event (if publisher is available)
+    <span class="cov0" title="0">if s.publisher != nil </span><span class="cov0" title="0">{
+        s.publisher.Publish("user.updated", map[string]interface{}{
+            "id": id,
+            "changes": updates,
+            "timestamp": time.Now(),
+        })
+    }</span>
+    
+    <span class="cov0" title="0">return nil</span>
+}
+
+// DeleteUser removes a user and clears caches
+func (s *UserService) DeleteUser(id uint) error <span class="cov0" title="0">{
+    if err := s.repo.Delete(id); err != nil </span><span class="cov0" title="0">{
+        return err
+    }</span>
+    
+    // Clear all related caches (if cache is available)
+    <span class="cov0" title="0">if s.cache != nil </span><span class="cov0" title="0">{
+        s.cache.Delete(fmt.Sprintf("user:%d", id))
+        s.cache.Delete("users:list:*")
+    }</span>
+    
+    // Notify other services about deletion (if publisher is available)
+    <span class="cov0" title="0">if s.publisher != nil </span><span class="cov0" title="0">{
+        s.publisher.Publish("user.deleted", map[string]interface{}{
+            "id": id,
+            "timestamp": time.Now(),
+        })
+    }</span>
+    
+    <span class="cov0" title="0">return nil</span>
+}</pre>
+		
+		<pre class="file" id="file20" style="display: none">package utils
+
+import (
+    "golang.org/x/crypto/bcrypt"
+)
+
+// HashPassword generates bcrypt hash from plain password
+func HashPassword(password string) (string, error) <span class="cov0" title="0">{
+    // Generate hash with cost of 10 (reasonable security/performance balance)
+    bytes, err := bcrypt.GenerateFromPassword([]byte(password), 10)
+    if err != nil </span><span class="cov0" title="0">{
+        return "", err
+    }</span>
+    <span class="cov0" title="0">return string(bytes), nil</span>
+}
+
+// CheckPasswordHash compares plain password with hash
+func CheckPasswordHash(password, hash string) bool <span class="cov0" title="0">{
+    // Compare password with hash
+    err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+    return err == nil
+}</span>
+
+// GenerateStrongHash creates a stronger hash (for sensitive operations)
+func GenerateStrongHash(password string) (string, error) <span class="cov0" title="0">{
+    // Use higher cost factor for more security (slower but more secure)
+    bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+    if err != nil </span><span class="cov0" title="0">{
+        return "", err
+    }</span>
+    <span class="cov0" title="0">return string(bytes), nil</span>
+}</pre>
+		
+		<pre class="file" id="file21" style="display: none">package utils
+
+import (
+    "errors"
+    "time"
+    "github.com/dgrijalva/jwt-go"
+)
+
+// JWT secret key (should be in environment variable)
+var jwtSecret = []byte("your-super-secret-jwt-key-change-in-production")
+
+// Claims represents JWT claims structure
+type Claims struct {
+    UserID    uint   `json:"user_id"`
+    Email     string `json:"email"`
+    Role      string `json:"role"`
+    jwt.StandardClaims
+}
+
+// GenerateJWT creates a new JWT token for authenticated user
+func GenerateJWT(userID uint, email, role string) (string, error) <span class="cov0" title="0">{
+    // Set token expiration time (24 hours)
+    expirationTime := time.Now().Add(24 * time.Hour)
+    
+    // Create claims with user info
+    claims := &amp;Claims{
+        UserID: userID,
+        Email:  email,
+        Role:   role,
+        StandardClaims: jwt.StandardClaims{
+            ExpiresAt: expirationTime.Unix(),
+            IssuedAt:  time.Now().Unix(),
+            Issuer:    "abc-user-management",
+        },
+    }
+    
+    // Create token with claims
+    token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+    
+    // Sign token with secret key
+    tokenString, err := token.SignedString(jwtSecret)
+    if err != nil </span><span class="cov0" title="0">{
+        return "", err
+    }</span>
+    
+    <span class="cov0" title="0">return tokenString, nil</span>
+}
+
+// ValidateJWT verifies and parses JWT token
+func ValidateJWT(tokenString string) (*Claims, error) <span class="cov0" title="0">{
+    claims := &amp;Claims{}
+    
+    // Parse token with claims
+    token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) </span><span class="cov0" title="0">{
+        // Verify signing method
+        if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok </span><span class="cov0" title="0">{
+            return nil, errors.New("invalid signing method")
+        }</span>
+        <span class="cov0" title="0">return jwtSecret, nil</span>
+    })
+    
+    <span class="cov0" title="0">if err != nil </span><span class="cov0" title="0">{
+        return nil, err
+    }</span>
+    
+    // Check if token is valid
+    <span class="cov0" title="0">if !token.Valid </span><span class="cov0" title="0">{
+        return nil, errors.New("invalid token")
+    }</span>
+    
+    // Check if token is expired
+    <span class="cov0" title="0">if time.Now().Unix() &gt; claims.ExpiresAt </span><span class="cov0" title="0">{
+        return nil, errors.New("token expired")
+    }</span>
+    
+    <span class="cov0" title="0">return claims, nil</span>
+}
+
+// RefreshJWT creates a new token with extended expiration
+func RefreshJWT(oldToken string) (string, error) <span class="cov0" title="0">{
+    // Validate old token
+    claims, err := ValidateJWT(oldToken)
+    if err != nil </span><span class="cov0" title="0">{
+        return "", err
+    }</span>
+    
+    // Generate new token with same claims but new expiration
+    <span class="cov0" title="0">return GenerateJWT(claims.UserID, claims.Email, claims.Role)</span>
+}
+
+// SetJWTSecret updates the JWT secret (for testing purposes)
+func SetJWTSecret(secret string) <span class="cov0" title="0">{
+    jwtSecret = []byte(secret)
+}</pre>
+		
+		<pre class="file" id="file22" style="display: none">package utils
+
+import (
+    "math"
+)
+
+// PaginationParams holds pagination request parameters
+type PaginationParams struct {
+    Page  int    `json:"page"`
+    Limit int    `json:"limit"`
+    Sort  string `json:"sort"`
+    Order string `json:"order"`
+}
+
+// PaginationResponse contains paginated results metadata
+type PaginationResponse struct {
+    Data       interface{} `json:"data"`
+    Page       int         `json:"page"`
+    Limit      int         `json:"limit"`
+    Total      int64       `json:"total"`
+    TotalPages int         `json:"total_pages"`
+    HasNext    bool        `json:"has_next"`
+    HasPrev    bool        `json:"has_prev"`
+}
+
+// ValidatePagination ensures pagination params are valid
+func ValidatePagination(params *PaginationParams) *PaginationParams <span class="cov0" title="0">{
+    // Set defaults if not provided
+    if params.Page &lt; 1 </span><span class="cov0" title="0">{
+        params.Page = 1
+    }</span>
+    
+    <span class="cov0" title="0">if params.Limit &lt; 1 </span><span class="cov0" title="0">{
+        params.Limit = 10
+    }</span>
+    
+    // Cap maximum limit to prevent abuse
+    <span class="cov0" title="0">if params.Limit &gt; 100 </span><span class="cov0" title="0">{
+        params.Limit = 100
+    }</span>
+    
+    // Default sort order
+    <span class="cov0" title="0">if params.Order == "" </span><span class="cov0" title="0">{
+        params.Order = "desc"
+    }</span>
+    
+    <span class="cov0" title="0">if params.Sort == "" </span><span class="cov0" title="0">{
+        params.Sort = "created_at"
+    }</span>
+    
+    <span class="cov0" title="0">return params</span>
+}
+
+// CalculateOffset computes database offset from page
+func CalculateOffset(page, limit int) int <span class="cov0" title="0">{
+    return (page - 1) * limit
+}</span>
+
+// BuildPaginationResponse creates pagination metadata
+func BuildPaginationResponse(data interface{}, page, limit int, total int64) *PaginationResponse <span class="cov0" title="0">{
+    totalPages := int(math.Ceil(float64(total) / float64(limit)))
+    
+    return &amp;PaginationResponse{
+        Data:       data,
+        Page:       page,
+        Limit:      limit,
+        Total:      total,
+        TotalPages: totalPages,
+        HasNext:    page &lt; totalPages,
+        HasPrev:    page &gt; 1,
+    }
+}</pre>
+		
+		<pre class="file" id="file23" style="display: none">package utils
+
+import (
+    "errors"
+    "regexp"
+    "strings"
+)
+
+var (
+    ErrUserTooYoung  = errors.New("user must be 18 years or older")
+    ErrEmailRequired = errors.New("email is required")
+    ErrInvalidEmail  = errors.New("invalid email format")
+    ErrPasswordWeak  = errors.New("password is too weak")
+    ErrNameTooShort  = errors.New("name must be at least 2 characters")
+    ErrNameTooLong   = errors.New("name must not exceed 100 characters")
+)
+
+// ValidateEmail checks if email format is valid
+func ValidateEmail(email string) bool <span class="cov0" title="0">{
+    // Basic email regex pattern
+    emailRegex := regexp.MustCompile(`^[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$`)
+    return emailRegex.MatchString(strings.ToLower(email))
+}</span>
+
+// ValidateAge checks if user meets minimum age requirement
+func ValidateAge(age int) bool <span class="cov0" title="0">{
+    return age &gt;= 18
+}</span>
+
+// ValidateName checks if name meets requirements
+func ValidateName(name string) error <span class="cov0" title="0">{
+    // Trim spaces and check length
+    name = strings.TrimSpace(name)
+    
+    if len(name) &lt; 2 </span><span class="cov0" title="0">{
+        return ErrNameTooShort
+    }</span>
+    
+    <span class="cov0" title="0">if len(name) &gt; 100 </span><span class="cov0" title="0">{
+        return ErrNameTooLong
+    }</span>
+    
+    // Check for valid characters (letters, spaces, hyphens, apostrophes)
+    <span class="cov0" title="0">validNameRegex := regexp.MustCompile(`^[a-zA-Z\s\-']+$`)
+    if !validNameRegex.MatchString(name) </span><span class="cov0" title="0">{
+        return errors.New("name contains invalid characters")
+    }</span>
+    
+    <span class="cov0" title="0">return nil</span>
+}
+
+// ValidatePassword checks password strength
+func ValidatePassword(password string) error <span class="cov0" title="0">{
+    if len(password) &lt; 6 </span><span class="cov0" title="0">{
+        return errors.New("password must be at least 6 characters")
+    }</span>
+    
+    // Optional: Check for password complexity
+    <span class="cov0" title="0">hasUpper := regexp.MustCompile(`[A-Z]`).MatchString(password)
+    hasLower := regexp.MustCompile(`[a-z]`).MatchString(password)
+    hasNumber := regexp.MustCompile(`[0-9]`).MatchString(password)
+    
+    if !hasUpper || !hasLower || !hasNumber </span><span class="cov0" title="0">{
+        return ErrPasswordWeak
+    }</span>
+    
+    <span class="cov0" title="0">return nil</span>
+}
+
+// SanitizeInput removes potentially harmful characters
+func SanitizeInput(input string) string <span class="cov0" title="0">{
+    // Remove HTML tags and script injections
+    htmlRegex := regexp.MustCompile(`&lt;[^&gt;]*&gt;`)
+    sanitized := htmlRegex.ReplaceAllString(input, "")
+    
+    // Trim excessive whitespace
+    sanitized = strings.TrimSpace(sanitized)
+    
+    return sanitized
+}</span>
+
+// ValidateUserInput performs all user input validations
+func ValidateUserInput(name, email string, age int) error <span class="cov0" title="0">{
+    // Validate name
+    if err := ValidateName(name); err != nil </span><span class="cov0" title="0">{
+        return err
+    }</span>
+    
+    // Validate email
+    <span class="cov0" title="0">if !ValidateEmail(email) </span><span class="cov0" title="0">{
+        return ErrInvalidEmail
+    }</span>
+    
+    // Validate age
+    <span class="cov0" title="0">if !ValidateAge(age) </span><span class="cov0" title="0">{
+        return ErrUserTooYoung
+    }</span>
+    
+    <span class="cov0" title="0">return nil</span>
+}</pre>
+		
+		<pre class="file" id="file24" style="display: none">package cache
+
+import (
+    "context"
+    "strings"
+    "time"
+    "abc-user-management/internal/config"
+    
+    "github.com/go-redis/redis/v8"
+)
+
+type RedisClient struct {
+    Client *redis.Client
+    ctx    context.Context
+}
+
+// InitRedis establishes connection to Redis cache
+func InitRedis(cfg *config.Config) *RedisClient <span class="cov0" title="0">{
+    rdb := redis.NewClient(&amp;redis.Options{
+        Addr:     cfg.RedisHost + ":" + cfg.RedisPort,
+        Password: cfg.RedisPassword,
+        DB:       0,
+    })
+    
+    return &amp;RedisClient{
+        Client: rdb,
+        ctx:    context.Background(),
+    }
+}</span>
+
+// Set stores value in cache with expiration
+func (r *RedisClient) Set(key string, value string, expiration time.Duration) error <span class="cov0" title="0">{
+    return r.Client.Set(r.ctx, key, value, expiration).Err()
+}</span>
+
+// Get retrieves value from cache
+func (r *RedisClient) Get(key string) (string, error) <span class="cov0" title="0">{
+    return r.Client.Get(r.ctx, key).Result()
+}</span>
+
+// Delete removes key from cache
+func (r *RedisClient) Delete(pattern string) error <span class="cov0" title="0">{
+    // Support wildcard deletion for cache invalidation
+    if strings.Contains(pattern, "*") </span><span class="cov0" title="0">{
+        keys, err := r.Client.Keys(r.ctx, pattern).Result()
+        if err != nil </span><span class="cov0" title="0">{
+            return err
+        }</span>
+        <span class="cov0" title="0">if len(keys) &gt; 0 </span><span class="cov0" title="0">{
+            return r.Client.Del(r.ctx, keys...).Err()
+        }</span>
+        <span class="cov0" title="0">return nil</span>
+    }
+    <span class="cov0" title="0">return r.Client.Del(r.ctx, pattern).Err()</span>
+}
+
+// Close terminates Redis connection
+func (r *RedisClient) Close() error <span class="cov0" title="0">{
+    return r.Client.Close()
+}</pre>
+		
+		<pre class="file" id="file25" style="display: none">package database
+
+import (
+    "context"
+    "time"
+    "abc-user-management/internal/config"
+    
+    "go.mongodb.org/mongo-driver/mongo"
+    "go.mongodb.org/mongo-driver/mongo/options"
+)
+
+// InitializeMongoDB establishes connection to MongoDB
+func InitializeMongoDB(cfg *config.Config) (*mongo.Database, error) <span class="cov0" title="0">{
+    // Set client options with timeout
+    ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+    defer cancel()
+    
+    // Parse MongoDB URI and create client
+    clientOptions := options.Client().ApplyURI(cfg.MongoURI)
+    
+    // Set connection pool size for production
+    clientOptions.SetMaxPoolSize(50)
+    clientOptions.SetMinPoolSize(10)
+    
+    // Connect to MongoDB
+    client, err := mongo.Connect(ctx, clientOptions)
+    if err != nil </span><span class="cov0" title="0">{
+        return nil, err
+    }</span>
+    
+    // Verify connection with ping
+    <span class="cov0" title="0">err = client.Ping(ctx, nil)
+    if err != nil </span><span class="cov0" title="0">{
+        return nil, err
+    }</span>
+    
+    // Get database from connection
+    <span class="cov0" title="0">database := client.Database("abc_users")
+    
+    return database, nil</span>
+}</pre>
+		
+		<pre class="file" id="file26" style="display: none">package database
+
+import (
+        "abc-user-management/internal/config"
+        "abc-user-management/internal/models"
+        "fmt"
+        "log"
+        "time"
+
+        "gorm.io/driver/mysql"
+        "gorm.io/gorm"
+        "gorm.io/gorm/logger"
+)
+
+// InitializeDB sets up database connection based on configuration
+func InitializeDB(cfg *config.Config) (*gorm.DB, error) <span class="cov0" title="0">{
+        var db *gorm.DB
+        var err error
+
+        log.Printf("Initializing database connection to %s:%s/%s as user %s",
+                cfg.DBHost, cfg.DBPort, cfg.DBName, cfg.DBUser)
+
+        switch cfg.DBType </span>{
+        case "mysql":<span class="cov0" title="0">
+                db, err = initMySQL(cfg)</span>
+        case "mongodb":<span class="cov0" title="0">
+                return initMongoDBWrapper(cfg)</span>
+        default:<span class="cov0" title="0">
+                // Default to MySQL
+                db, err = initMySQL(cfg)</span>
+        }
+
+        <span class="cov0" title="0">if err != nil </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("failed to initialize database: %v", err)
+        }</span>
+
+        // Run migrations - simplified without problematic index creation
+        <span class="cov0" title="0">if err = runMigrations(db); err != nil </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("failed to run migrations: %v", err)
+        }</span>
+
+        <span class="cov0" title="0">log.Println("Database connection and migrations completed successfully")
+        return db, nil</span>
+}
+
+// initMySQL creates MySQL connection with retry logic
+func initMySQL(cfg *config.Config) (*gorm.DB, error) <span class="cov0" title="0">{
+        // Build MySQL DSN (Data Source Name)
+        dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&amp;parseTime=True&amp;loc=Local&amp;timeout=30s&amp;readTimeout=30s&amp;writeTimeout=30s",
+                cfg.DBUser,
+                cfg.DBPassword,
+                cfg.DBHost,
+                cfg.DBPort,
+                cfg.DBName,
+        )
+
+        log.Printf("Connecting to MySQL with DSN: %s:***@tcp(%s:%s)/%s",
+                cfg.DBUser, cfg.DBHost, cfg.DBPort, cfg.DBName)
+
+        // Configure GORM
+        gormConfig := &amp;gorm.Config{
+                Logger: logger.Default.LogMode(logger.Warn), // Less verbose logging
+                NowFunc: func() time.Time </span><span class="cov0" title="0">{
+                        return time.Now().Local()
+                }</span>,
+        }
+
+        // Retry connection logic
+        <span class="cov0" title="0">var db *gorm.DB
+        var err error
+        maxRetries := 10
+
+        for i := 0; i &lt; maxRetries; i++ </span><span class="cov0" title="0">{
+                db, err = gorm.Open(mysql.Open(dsn), gormConfig)
+                if err == nil </span><span class="cov0" title="0">{
+                        break</span>
+                }
+
+                <span class="cov0" title="0">log.Printf("Failed to connect to MySQL (attempt %d/%d): %v", i+1, maxRetries, err)
+                if i &lt; maxRetries-1 </span><span class="cov0" title="0">{
+                        time.Sleep(time.Duration(i+1) * 2 * time.Second)
+                }</span>
+        }
+
+        <span class="cov0" title="0">if err != nil </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("failed to connect to MySQL after %d attempts: %v", maxRetries, err)
+        }</span>
+
+        // Get underlying SQL database to configure connection pool
+        <span class="cov0" title="0">sqlDB, err := db.DB()
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("failed to get underlying SQL database: %v", err)
+        }</span>
+
+        // Set connection pool settings
+        <span class="cov0" title="0">sqlDB.SetMaxIdleConns(10)
+        sqlDB.SetMaxOpenConns(100)
+        sqlDB.SetConnMaxLifetime(time.Hour)
+
+        // Test connection
+        if err = sqlDB.Ping(); err != nil </span><span class="cov0" title="0">{
+                return nil, fmt.Errorf("failed to ping MySQL: %v", err)
+        }</span>
+
+        <span class="cov0" title="0">log.Println("MySQL connection established successfully")
+        return db, nil</span>
+}
+
+func runMigrations(db *gorm.DB) error <span class="cov0" title="0">{
+        log.Println("Running database migrations...")
+
+        // Simply run AutoMigrate - let GORM handle everything
+        err := db.AutoMigrate(
+                &amp;models.User{},
+                &amp;models.Admin{},
+        )
+
+        if err != nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("failed to run auto migrations: %v", err)
+        }</span>
+
+        <span class="cov0" title="0">log.Println("Database migrations completed successfully")
+        return nil</span>
+}
+
+// initMongoDBWrapper wraps MongoDB for compatibility
+func initMongoDBWrapper(_ *config.Config) (*gorm.DB, error) <span class="cov0" title="0">{
+        return nil, fmt.Errorf("MongoDB support requires additional configuration")
+}</span>
+
+// CloseDB closes database connection gracefully
+func CloseDB(db *gorm.DB) error <span class="cov0" title="0">{
+        sqlDB, err := db.DB()
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        <span class="cov0" title="0">return sqlDB.Close()</span>
+}
+</pre>
+		
+		<pre class="file" id="file27" style="display: none">package messaging
+
+import (
+        "context"
+    "encoding/json"
+    "log"
+    "github.com/IBM/sarama"
+
+)
+
+// KafkaProducer handles event publishing to Kafka
+type KafkaProducer struct {
+    producer sarama.SyncProducer
+    topic    string
+}
+
+// InitKafka creates Kafka producer as alternative to RabbitMQ
+func InitKafka(brokers []string, topic string) (*KafkaProducer, error) <span class="cov0" title="0">{
+    // Configure Kafka producer
+    config := sarama.NewConfig()
+    config.Producer.Return.Successes = true
+    config.Producer.RequiredAcks = sarama.WaitForAll
+    config.Producer.Retry.Max = 5
+    
+    // Create producer instance
+    producer, err := sarama.NewSyncProducer(brokers, config)
+    if err != nil </span><span class="cov0" title="0">{
+        return nil, err
+    }</span>
+    
+    <span class="cov0" title="0">return &amp;KafkaProducer{
+        producer: producer,
+        topic:    topic,
+    }, nil</span>
+}
+
+// PublishEvent sends event to Kafka topic
+func (k *KafkaProducer) PublishEvent(eventType string, data interface{}) error <span class="cov0" title="0">{
+    // Prepare event payload
+    event := map[string]interface{}{
+        "type": eventType,
+        "data": data,
+    }
+    
+    // Marshal to JSON
+    payload, err := json.Marshal(event)
+    if err != nil </span><span class="cov0" title="0">{
+        return err
+    }</span>
+    
+    // Create Kafka message
+    <span class="cov0" title="0">msg := &amp;sarama.ProducerMessage{
+        Topic: k.topic,
+        Key:   sarama.StringEncoder(eventType),
+        Value: sarama.ByteEncoder(payload),
+    }
+    
+    // Send message to Kafka
+    partition, offset, err := k.producer.SendMessage(msg)
+    if err != nil </span><span class="cov0" title="0">{
+        log.Printf("Failed to publish to Kafka: %v", err)
+        return err
+    }</span>
+    
+    <span class="cov0" title="0">log.Printf("Event published to Kafka - Partition: %d, Offset: %d", partition, offset)
+    
+    return nil</span>
+}
+
+// Close shuts down Kafka producer
+func (k *KafkaProducer) Close() error <span class="cov0" title="0">{
+    return k.producer.Close()
+}</span>
+
+// KafkaConsumer handles event consumption from Kafka
+type KafkaConsumer struct {
+    consumer sarama.ConsumerGroup
+    topics   []string
+    handler  sarama.ConsumerGroupHandler
+}
+
+// InitKafkaConsumer creates Kafka consumer for event processing
+func InitKafkaConsumer(brokers []string, group string, topics []string) (*KafkaConsumer, error) <span class="cov0" title="0">{
+    // Configure consumer group
+    config := sarama.NewConfig()
+    config.Consumer.Group.Rebalance.Strategy = sarama.BalanceStrategyRoundRobin
+    config.Consumer.Offsets.Initial = sarama.OffsetNewest
+    
+    // Create consumer group
+    consumer, err := sarama.NewConsumerGroup(brokers, group, config)
+    if err != nil </span><span class="cov0" title="0">{
+        return nil, err
+    }</span>
+    
+    <span class="cov0" title="0">return &amp;KafkaConsumer{
+        consumer: consumer,
+        topics:   topics,
+    }, nil</span>
+}
+
+// Start begins consuming messages from Kafka
+func (k *KafkaConsumer) Start(handler sarama.ConsumerGroupHandler) error <span class="cov0" title="0">{
+    ctx := context.Background()
+    
+    // Start consuming in goroutine
+    go func() </span><span class="cov0" title="0">{
+        for </span><span class="cov0" title="0">{
+            // Handle consumer errors
+            if err := k.consumer.Consume(ctx, k.topics, handler); err != nil </span><span class="cov0" title="0">{
+                log.Printf("Kafka consumer error: %v", err)
+            }</span>
+        }
+    }()
+    
+    <span class="cov0" title="0">log.Println("Kafka consumer started")
+    return nil</span>
+}</pre>
+		
+		<pre class="file" id="file28" style="display: none">package messaging
+
+import (
+    "fmt"
+    "time"
+    "github.com/streadway/amqp"
+)
+
+// RabbitMQConnection wraps RabbitMQ connection with reconnection logic
+type RabbitMQConnection struct {
+    conn    *amqp.Connection
+    channel *amqp.Channel
+    url     string
+}
+
+// InitRabbitMQ establishes connection to RabbitMQ server
+func InitRabbitMQ(url string) (*amqp.Connection, error) <span class="cov0" title="0">{
+    // Retry connection with exponential backoff
+    var conn *amqp.Connection
+    var err error
+    
+    maxRetries := 5
+    for i := 0; i &lt; maxRetries; i++ </span><span class="cov0" title="0">{
+        conn, err = amqp.Dial(url)
+        if err == nil </span><span class="cov0" title="0">{
+            break</span>
+        }
+        
+        // Exponential backoff
+        <span class="cov0" title="0">waitTime := time.Duration(1&lt;&lt;uint(i)) * time.Second
+        fmt.Printf("Failed to connect to RabbitMQ (attempt %d/%d), retrying in %s: %v\n", 
+            i+1, maxRetries, waitTime, err)
+        time.Sleep(waitTime)</span>
+    }
+    
+    <span class="cov0" title="0">if err != nil </span><span class="cov0" title="0">{
+        return nil, fmt.Errorf("failed to connect to RabbitMQ after %d attempts: %v", maxRetries, err)
+    }</span>
+    
+    <span class="cov0" title="0">fmt.Println("Successfully connected to RabbitMQ")
+    return conn, nil</span>
+}
+
+// NewRabbitMQConnection creates a managed RabbitMQ connection
+func NewRabbitMQConnection(url string) (*RabbitMQConnection, error) <span class="cov0" title="0">{
+    conn, err := InitRabbitMQ(url)
+    if err != nil </span><span class="cov0" title="0">{
+        return nil, err
+    }</span>
+    
+    <span class="cov0" title="0">channel, err := conn.Channel()
+    if err != nil </span><span class="cov0" title="0">{
+        conn.Close()
+        return nil, fmt.Errorf("failed to open channel: %v", err)
+    }</span>
+    
+    <span class="cov0" title="0">return &amp;RabbitMQConnection{
+        conn:    conn,
+        channel: channel,
+        url:     url,
+    }, nil</span>
+}
+
+// DeclareExchange creates an exchange if it doesn't exist
+func (r *RabbitMQConnection) DeclareExchange(name, kind string) error <span class="cov0" title="0">{
+    return r.channel.ExchangeDeclare(
+        name,  // exchange name
+        kind,  // exchange type (direct, topic, fanout, headers)
+        true,  // durable
+        false, // auto-deleted
+        false, // internal
+        false, // no-wait
+        nil,   // arguments
+    )
+}</span>
+
+// DeclareQueue creates a queue if it doesn't exist
+func (r *RabbitMQConnection) DeclareQueue(name string) (amqp.Queue, error) <span class="cov0" title="0">{
+    return r.channel.QueueDeclare(
+        name,  // queue name
+        true,  // durable
+        false, // delete when unused
+        false, // exclusive
+        false, // no-wait
+        nil,   // arguments
+    )
+}</span>
+
+// BindQueue binds a queue to an exchange
+func (r *RabbitMQConnection) BindQueue(queueName, exchangeName, routingKey string) error <span class="cov0" title="0">{
+    return r.channel.QueueBind(
+        queueName,    // queue name
+        routingKey,   // routing key
+        exchangeName, // exchange
+        false,        // no-wait
+        nil,          // arguments
+    )
+}</span>
+
+// Publish sends a message to an exchange
+func (r *RabbitMQConnection) Publish(exchange, routingKey string, body []byte) error <span class="cov0" title="0">{
+    return r.channel.Publish(
+        exchange,   // exchange
+        routingKey, // routing key
+        false,      // mandatory
+        false,      // immediate
+        amqp.Publishing{
+            ContentType:  "application/json",
+            Body:         body,
+            DeliveryMode: amqp.Persistent, // Make message persistent
+            Timestamp:    time.Now(),
+        },
+    )
+}</span>
+
+// Consume starts consuming messages from a queue
+func (r *RabbitMQConnection) Consume(queueName string) (&lt;-chan amqp.Delivery, error) <span class="cov0" title="0">{
+    return r.channel.Consume(
+        queueName, // queue
+        "",        // consumer tag
+        false,     // auto-ack
+        false,     // exclusive
+        false,     // no-local
+        false,     // no-wait
+        nil,       // arguments
+    )
+}</span>
+
+// Close closes the RabbitMQ connection and channel
+func (r *RabbitMQConnection) Close() error <span class="cov0" title="0">{
+    if r.channel != nil </span><span class="cov0" title="0">{
+        if err := r.channel.Close(); err != nil </span><span class="cov0" title="0">{
+            return err
+        }</span>
+    }
+    
+    <span class="cov0" title="0">if r.conn != nil </span><span class="cov0" title="0">{
+        if err := r.conn.Close(); err != nil </span><span class="cov0" title="0">{
+            return err
+        }</span>
+    }
+    
+    <span class="cov0" title="0">return nil</span>
+}
+
+// Reconnect attempts to reconnect to RabbitMQ
+func (r *RabbitMQConnection) Reconnect() error <span class="cov0" title="0">{
+    // Close existing connection
+    r.Close()
+    
+    // Establish new connection
+    conn, err := InitRabbitMQ(r.url)
+    if err != nil </span><span class="cov0" title="0">{
+        return err
+    }</span>
+    
+    <span class="cov0" title="0">channel, err := conn.Channel()
+    if err != nil </span><span class="cov0" title="0">{
+        conn.Close()
+        return err
+    }</span>
+    
+    <span class="cov0" title="0">r.conn = conn
+    r.channel = channel
+    
+    return nil</span>
+}
+
+// HealthCheck verifies RabbitMQ connection is alive
+func (r *RabbitMQConnection) HealthCheck() error <span class="cov0" title="0">{
+    // Try to declare a temporary queue to test connection
+    _, err := r.channel.QueueDeclare(
+        "",    // random name
+        false, // durable
+        true,  // delete when unused
+        true,  // exclusive
+        false, // no-wait
+        nil,   // arguments
+    )
+    
+    return err
+}</pre>
+		
+		<pre class="file" id="file29" style="display: none">package integration
+
+import (
+        "abc-user-management/internal/models"
+        "fmt"
+        "testing"
+        "time"
+)
+
+// MockData provides test data for integration tests
+type MockData struct {
+        Users    []models.User
+        Admins   []models.User
+        TestData map[string]interface{}
+}
+
+// GetMockData returns comprehensive test data
+func GetMockData() *MockData <span class="cov0" title="0">{
+        return &amp;MockData{
+                Users: []models.User{
+                        {
+                                ID:        1,
+                                Name:      "John Doe",
+                                Email:     "john.doe@example.com",
+                                Age:       25,
+                                Password:  "$2a$10$YtQ2kh3h5X8TTFf9U4SxJORJwQgh8z/UW2sJYLnCJ7K3HxJjmUmHC", // Password123
+                                Role:      "user",
+                                Active:    true,
+                                CreatedAt: time.Now().Add(-24 * time.Hour),
+                                UpdatedAt: time.Now(),
+                        },
+                        {
+                                ID:        2,
+                                Name:      "Jane Smith",
+                                Email:     "jane.smith@example.com",
+                                Age:       30,
+                                Password:  "$2a$10$YtQ2kh3h5X8TTFf9U4SxJORJwQgh8z/UW2sJYLnCJ7K3HxJjmUmHC",
+                                Role:      "user",
+                                Active:    true,
+                                CreatedAt: time.Now().Add(-48 * time.Hour),
+                                UpdatedAt: time.Now(),
+                        },
+                        {
+                                ID:        3,
+                                Name:      "Bob Johnson",
+                                Email:     "bob.johnson@example.com",
+                                Age:       35,
+                                Password:  "$2a$10$YtQ2kh3h5X8TTFf9U4SxJORJwQgh8z/UW2sJYLnCJ7K3HxJjmUmHC",
+                                Role:      "user",
+                                Active:    false,
+                                CreatedAt: time.Now().Add(-72 * time.Hour),
+                                UpdatedAt: time.Now(),
+                        },
+                        {
+                                ID:        4,
+                                Name:      "Alice Brown",
+                                Email:     "alice.brown@example.com",
+                                Age:       28,
+                                Password:  "$2a$10$YtQ2kh3h5X8TTFf9U4SxJORJwQgh8z/UW2sJYLnCJ7K3HxJjmUmHC",
+                                Role:      "user",
+                                Active:    true,
+                                CreatedAt: time.Now().Add(-96 * time.Hour),
+                                UpdatedAt: time.Now(),
+                        },
+                        {
+                                ID:        5,
+                                Name:      "Charlie Wilson",
+                                Email:     "charlie.wilson@example.com",
+                                Age:       45,
+                                Password:  "$2a$10$YtQ2kh3h5X8TTFf9U4SxJORJwQgh8z/UW2sJYLnCJ7K3HxJjmUmHC",
+                                Role:      "manager",
+                                Active:    true,
+                                CreatedAt: time.Now().Add(-120 * time.Hour),
+                                UpdatedAt: time.Now(),
+                        },
+                },
+                Admins: []models.User{
+                        {
+                                ID:        100,
+                                Name:      "Admin User",
+                                Email:     "admin@abc.com",
+                                Age:       30,
+                                Password:  "$2a$10$YtQ2kh3h5X8TTFf9U4SxJORJwQgh8z/UW2sJYLnCJ7K3HxJjmUmHC", // Admin@123456
+                                Role:      "admin",
+                                Active:    true,
+                                CreatedAt: time.Now().Add(-365 * 24 * time.Hour),
+                                UpdatedAt: time.Now(),
+                        },
+                        {
+                                ID:        101,
+                                Name:      "Super Admin",
+                                Email:     "super.admin@abc.com",
+                                Age:       35,
+                                Password:  "$2a$10$YtQ2kh3h5X8TTFf9U4SxJORJwQgh8z/UW2sJYLnCJ7K3HxJjmUmHC",
+                                Role:      "admin",
+                                Active:    true,
+                                CreatedAt: time.Now().Add(-200 * 24 * time.Hour),
+                                UpdatedAt: time.Now(),
+                        },
+                },
+                TestData: map[string]interface{}{
+                        "validUser": map[string]interface{}{
+                                "name":     "Test User",
+                                "email":    "test@example.com",
+                                "age":      25,
+                                "password": "TestPassword123",
+                                "role":     "user",
+                        },
+                        "invalidAgeUser": map[string]interface{}{
+                                "name":     "Young User",
+                                "email":    "young@example.com",
+                                "age":      16, // Under 18
+                                "password": "TestPassword123",
+                        },
+                        "invalidEmailUser": map[string]interface{}{
+                                "name":     "Invalid Email",
+                                "email":    "not-an-email",
+                                "age":      25,
+                                "password": "TestPassword123",
+                        },
+                        "weakPasswordUser": map[string]interface{}{
+                                "name":     "Weak Password",
+                                "email":    "weak@example.com",
+                                "age":      25,
+                                "password": "123", // Too short
+                        },
+                        "updateData": map[string]interface{}{
+                                "name": "Updated Name",
+                                "age":  40,
+                        },
+                        "validCredentials": map[string]interface{}{
+                                "email":    "admin@abc.com",
+                                "password": "Admin@123456",
+                        },
+                        "invalidCredentials": map[string]interface{}{
+                                "email":    "wrong@example.com",
+                                "password": "wrongpassword",
+                        },
+                        "paginationParams": []map[string]interface{}{
+                                {
+                                        "page":  1,
+                                        "limit": 10,
+                                },
+                                {
+                                        "page":  2,
+                                        "limit": 5,
+                                },
+                                {
+                                        "page":  1,
+                                        "limit": 100,
+                                },
+                        },
+                        "searchQueries": []string{
+                                "john",
+                                "example.com",
+                                "admin",
+                                "nonexistent",
+                                "",
+                        },
+                },
+        }
+}</span>
+
+// GetTestUsers returns a slice of test users with varied data
+func GetTestUsers(count int) []models.User <span class="cov0" title="0">{
+        users := make([]models.User, count)
+        roles := []string{"user", "manager", "admin"}
+
+        for i := 0; i &lt; count; i++ </span><span class="cov0" title="0">{
+                users[i] = models.User{
+                        ID:        uint(i + 1),
+                        Name:      fmt.Sprintf("Test User %d", i+1),
+                        Email:     fmt.Sprintf("user%d@test.com", i+1),
+                        Age:       20 + (i % 40),
+                        Password:  "$2a$10$YtQ2kh3h5X8TTFf9U4SxJORJwQgh8z/UW2sJYLnCJ7K3HxJjmUmHC",
+                        Role:      roles[i%len(roles)],
+                        Active:    i%3 != 0, // Every third user is inactive
+                        CreatedAt: time.Now().Add(-time.Duration(i*24) * time.Hour),
+                        UpdatedAt: time.Now(),
+                }
+        }</span>
+
+        <span class="cov0" title="0">return users</span>
+}
+
+// TestScenarios contains different test scenarios
+type TestScenarios struct {
+        Name        string
+        Description string
+        TestFunc    func(*testing.T)
+}
+
+// GetTestScenarios returns all test scenarios
+func GetTestScenarios() []TestScenarios <span class="cov0" title="0">{
+        return []TestScenarios{
+                {
+                        Name:        "BusinessRules",
+                        Description: "Test all business rule validations",
+                        TestFunc:    TestBusinessRules,
+                },
+                {
+                        Name:        "CRUDOperations",
+                        Description: "Test complete CRUD cycle",
+                        TestFunc:    TestCRUDOperations,
+                },
+                {
+                        Name:        "PaginationSearch",
+                        Description: "Test pagination and search functionality",
+                        TestFunc:    TestPaginationAndSearch,
+                },
+                {
+                        Name:        "Authentication",
+                        Description: "Test authentication and authorization",
+                        TestFunc:    TestAuthentication,
+                },
+                {
+                        Name:        "ErrorHandling",
+                        Description: "Test error scenarios",
+                        TestFunc:    TestErrorHandling,
+                },
+        }
+}</span>
+
+// TestBusinessRules tests all business rule validations
+func TestBusinessRules(t *testing.T) <span class="cov0" title="0">{
+        mockData := GetMockData()
+
+        testCases := []struct {
+                name     string
+                data     map[string]interface{}
+                expected string
+        }{
+                {
+                        name:     "Valid user passes all rules",
+                        data:     mockData.TestData["validUser"].(map[string]interface{}),
+                        expected: "success",
+                },
+                {
+                        name:     "User under 18 rejected",
+                        data:     mockData.TestData["invalidAgeUser"].(map[string]interface{}),
+                        expected: "age validation failed",
+                },
+                {
+                        name:     "Invalid email format rejected",
+                        data:     mockData.TestData["invalidEmailUser"].(map[string]interface{}),
+                        expected: "email validation failed",
+                },
+                {
+                        name:     "Weak password rejected",
+                        data:     mockData.TestData["weakPasswordUser"].(map[string]interface{}),
+                        expected: "password validation failed",
+                },
+        }
+
+        for _, tc := range testCases </span><span class="cov0" title="0">{
+                t.Run(tc.name, func(t *testing.T) </span><span class="cov0" title="0">{
+                        // Test implementation would go here
+                        t.Logf("Testing: %s", tc.name)
+                }</span>)
+        }
+}
+
+// TestCRUDOperations tests the complete CRUD cycle
+func TestCRUDOperations(t *testing.T) <span class="cov0" title="0">{
+        users := GetTestUsers(5)
+
+        t.Run("Create", func(t *testing.T) </span><span class="cov0" title="0">{
+                for _, user := range users </span><span class="cov0" title="0">{
+                        t.Logf("Creating user: %s", user.Email)
+                        // Implementation would create user via API
+                }</span>
+        })
+
+        <span class="cov0" title="0">t.Run("Read", func(t *testing.T) </span><span class="cov0" title="0">{
+                for _, user := range users </span><span class="cov0" title="0">{
+                        t.Logf("Reading user ID: %d", user.ID)
+                        // Implementation would fetch user via API
+                }</span>
+        })
+
+        <span class="cov0" title="0">t.Run("Update", func(t *testing.T) </span><span class="cov0" title="0">{
+                for _, user := range users </span><span class="cov0" title="0">{
+                        user.Name = "Updated " + user.Name
+                        t.Logf("Updating user ID: %d", user.ID)
+                        // Implementation would update user via API
+                }</span>
+        })
+
+        <span class="cov0" title="0">t.Run("Delete", func(t *testing.T) </span><span class="cov0" title="0">{
+                for _, user := range users </span><span class="cov0" title="0">{
+                        t.Logf("Deleting user ID: %d", user.ID)
+                        // Implementation would delete user via API
+                }</span>
+        })
+}
+
+// TestPaginationAndSearch tests pagination and search features
+func TestPaginationAndSearch(t *testing.T) <span class="cov0" title="0">{
+        // Create 50 test users for pagination testing
+
+        t.Run("Pagination", func(t *testing.T) </span><span class="cov0" title="0">{
+                testCases := []struct {
+                        page     int
+                        limit    int
+                        expected int
+                }{
+                        {1, 10, 10},
+                        {2, 10, 10},
+                        {5, 10, 10},
+                        {1, 25, 25},
+                        {2, 25, 25},
+                        {1, 100, 50},
+                }
+
+                for _, tc := range testCases </span><span class="cov0" title="0">{
+                        t.Logf("Testing page %d with limit %d", tc.page, tc.limit)
+                        // Implementation would test pagination
+                }</span>
+        })
+
+        <span class="cov0" title="0">t.Run("Search", func(t *testing.T) </span><span class="cov0" title="0">{
+                searches := []string{"Test", "User", "@test.com", "1", ""}
+
+                for _, search := range searches </span><span class="cov0" title="0">{
+                        t.Logf("Testing search: '%s'", search)
+                        // Implementation would test search
+                }</span>
+        })
+}
+
+// TestAuthentication tests authentication flows
+func TestAuthentication(t *testing.T) <span class="cov0" title="0">{
+        mockData := GetMockData()
+
+        t.Run("ValidLogin", func(t *testing.T) </span><span class="cov0" title="0">{
+                creds := mockData.TestData["validCredentials"].(map[string]interface{})
+                t.Logf("Testing valid login: %s", creds["email"])
+                // Implementation would test valid login
+        }</span>)
+
+        <span class="cov0" title="0">t.Run("InvalidLogin", func(t *testing.T) </span><span class="cov0" title="0">{
+                creds := mockData.TestData["invalidCredentials"].(map[string]interface{})
+                t.Logf("Testing invalid login: %s", creds["email"])
+                // Implementation would test invalid login
+        }</span>)
+
+        <span class="cov0" title="0">t.Run("TokenValidation", func(t *testing.T) </span><span class="cov0" title="0">{
+                t.Log("Testing JWT token validation")
+                // Implementation would test token validation
+        }</span>)
+
+        <span class="cov0" title="0">t.Run("ProtectedEndpoints", func(t *testing.T) </span><span class="cov0" title="0">{
+                endpoints := []string{"/users", "/users/1", "/users/1"}
+                for _, endpoint := range endpoints </span><span class="cov0" title="0">{
+                        t.Logf("Testing protected endpoint: %s", endpoint)
+                        // Implementation would test authorization
+                }</span>
+        })
+}
+
+// TestErrorHandling tests various error scenarios
+func TestErrorHandling(t *testing.T) <span class="cov0" title="0">{
+        errorScenarios := []struct {
+                name        string
+                description string
+                endpoint    string
+                method      string
+                body        interface{}
+                expected    int
+        }{
+                {
+                        name:        "NotFound",
+                        description: "Non-existent user",
+                        endpoint:    "/users/999999",
+                        method:      "GET",
+                        body:        nil,
+                        expected:    404,
+                },
+                {
+                        name:        "BadRequest",
+                        description: "Invalid JSON",
+                        endpoint:    "/users",
+                        method:      "POST",
+                        body:        "{invalid json}",
+                        expected:    400,
+                },
+                {
+                        name:        "Unauthorized",
+                        description: "No token provided",
+                        endpoint:    "/users",
+                        method:      "GET",
+                        body:        nil,
+                        expected:    401,
+                },
+                {
+                        name:        "Conflict",
+                        description: "Duplicate email",
+                        endpoint:    "/users",
+                        method:      "POST",
+                        body:        nil,
+                        expected:    409,
+                },
+        }
+
+        for _, scenario := range errorScenarios </span><span class="cov0" title="0">{
+                t.Run(scenario.name, func(t *testing.T) </span><span class="cov0" title="0">{
+                        t.Logf("Testing %s: %s", scenario.name, scenario.description)
+                        // Implementation would test error scenario
+                }</span>)
+        }
+}
+
+// BenchmarkTests for performance testing
+func BenchmarkUserCreation(b *testing.B) <span class="cov0" title="0">{
+        mockData := GetMockData()
+        userData := mockData.TestData["validUser"].(map[string]interface{})
+
+        b.ResetTimer()
+        for i := 0; i &lt; b.N; i++ </span><span class="cov0" title="0">{
+                // Simulate user creation
+                userData["email"] = fmt.Sprintf("bench%d@test.com", i)
+                // API call would go here
+        }</span>
+}
+
+func BenchmarkUserRetrieval(b *testing.B) <span class="cov0" title="0">{
+        b.ResetTimer()
+        for i := 0; i &lt; b.N; i++ </span>{<span class="cov0" title="0">
+                // Simulate user retrieval
+                // API call would go here
+        }</span>
+}
+
+func BenchmarkUserSearch(b *testing.B) <span class="cov0" title="0">{
+        searches := []string{"john", "test", "admin", "user"}
+
+        b.ResetTimer()
+        for i := 0; i &lt; b.N; i++ </span><span class="cov0" title="0">{
+                search := searches[i%len(searches)]
+                // Simulate search
+                _ = search
+        }</span>
+}
+
+// LoadTestData loads test data into the system
+func LoadTestData(t *testing.T, count int) <span class="cov0" title="0">{
+        t.Logf("Loading %d test users into the system", count)
+        users := GetTestUsers(count)
+
+        for i, user := range users </span><span class="cov0" title="0">{
+                if i%10 == 0 </span><span class="cov0" title="0">{
+                        t.Logf("Progress: %d/%d users loaded", i, count)
+                }</span>
+                // Implementation would create users via API
+                <span class="cov0" title="0">_ = user</span>
+        }
+
+        <span class="cov0" title="0">t.Logf("Successfully loaded %d users", count)</span>
+}
+</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>

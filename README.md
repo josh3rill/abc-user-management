@@ -85,3 +85,48 @@ docker-compose down
 ### 7. Running Tests
 
 - Unit and integration tests can be run inside the backend container or locally with Go.
+Run Everything (Unit + Integration):
+backend 
+NOTE: Mske sure to CD into backend
+
+# Option 1: Using the script
+its need to give run-tests.sh permission 
+```bash
+chmod +x run-tests.sh
+./run-tests.sh
+```
+# Option 2: Using Make
+```bash
+make test-all
+```
+# Option 3: Just run make (default is test-all)
+```bash
+make test
+Run Specific Test Types:
+bash# Only unit tests
+make test-unit
+```
+
+# Only integration tests
+```bash
+make test-integration
+```
+
+# With coverage report
+```bash
+make test-coverage
+```
+
+# Benchmark tests
+```bash
+make test-benchmark
+```
+
+# With race detection
+```bash
+make test-race
+For CI/CD:
+bash# Simple CI test with coverage threshold
+chmod +x test-ci.sh
+./test-ci.sh
+```
