@@ -1,0 +1,116 @@
+
+services:
+  # MySQL database service
+  mysql:
+    image: mysql:8.0
+    container_name: abc_mysql
+    restart: unless-stopped
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: secure_password_123
+      MYSQL_DATABASE: abc_user_management
+      MYSQL_USER: abc_user
+      MYSQL_PASSWORD: v12345
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_TCP_PORT: 3306
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./backend/migrations:/docker-entrypoint-initdb.d
+    networks:
+      - abc_network
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -uabc_user -pv12345 >/dev/null 2>&1 || true"]
+      timeout: 5s
+      retries: 1
+      interval: 10s
+      start_period: 0s
+
+  # Redis cache service
+  redis:
+    image: redis:7-alpine
+    container_name: abc_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    networks:
+      - abc_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  # Backend API service
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: abc_backend
+    restart: unless-stopped
+    environment:
+      PORT: 8085
+      ENV: development
+      DB_TYPE: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: abc_user
+      DB_PASSWORD: v12345
+      DB_NAME: abc_user_management
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      JWT_SECRET: your-super-secret-jwt-key-change-in-production
+      ADMIN_EMAIL: admin@abc.com
+      ADMIN_PASSWORD: Admin@123456
+    ports:
+      - "8085:8085"
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - abc_network
+
+  # Frontend service
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: abc_frontend
+    restart: unless-stopped
+    environment:
+      VITE_API_BASE_URL: http://localhost:8085/api/v1
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - abc_network
+
+networks:
+  abc_network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+
+  # # RabbitMQ message broker
+  # rabbitmq:
+  #   image: rabbitmq:3-management
+  #   container_name: abc_rabbitmq
+  #   restart: unless-stopped
+  #   environment:
+  #     RABBITMQ_DEFAULT_USER: admin
+  #     RABBITMQ_DEFAULT_PASS: admin
+  #   ports:
+  #     - "5672:5672"
+  #     - "15672:15672"  # Management UI
+  #   networks:
+  #     - abc_network
+  #   healthcheck:
+  #     test: ["CMD", "rabbitmq-diagnostics", "ping"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
