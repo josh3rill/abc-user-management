@@ -1,5 +1,5 @@
 # Multi-stage build for optimized Go binary
-FROM golang:1.25-alpine AS builder 
+FROM golang:1.25-alpine AS builder
 
 # Install build dependencies
 RUN apk add --no-cache git gcc musl-dev
@@ -20,7 +20,7 @@ COPY . .
 RUN CGO_ENABLED=1 GOOS=linux go build -o main cmd/server/main.go
 
 # Final stage - minimal runtime image
-FROM alpine:latest
+FROM alpine:latest 
 
 # Install runtime dependencies
 RUN apk --no-cache add ca-certificates mysql-client bash curl
@@ -31,9 +31,13 @@ WORKDIR /root/
 COPY --from=builder /app/main .
 COPY --from=builder /app/migrations ./migrations
 COPY --from=builder /app/.env .
+COPY --from=builder /app/wait-for-service.sh .
+
+# Make the wait script executable
+RUN chmod +x wait-for-service.sh
 
 # Expose port
 EXPOSE 8085
 
 # Run the application with MySQL wait
-CMD ["./wait-for-mysql.sh", "mysql", "./main"]
+CMD ["./wait-for-service.sh", "mysql", "3306", "./main"]
