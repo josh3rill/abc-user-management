@@ -48,3 +48,22 @@
 
 # # Wait for the Go application to finish
 # wait $APP_PID
+
+rabbitmq:
+  image: rabbitmq:3-management
+  container_name: abc_rabbitmq
+  restart: unless-stopped
+  environment:
+    RABBITMQ_DEFAULT_USER: admin
+    RABBITMQ_DEFAULT_PASS: admin
+  ports:
+    - "5672:5672"
+    - "15672:15672"
+  networks:
+    - abc_network
+  healthcheck:
+    test: ["CMD-SHELL", "rabbitmq-diagnostics -q ping"]
+    interval: 30s
+    timeout: 10s
+    retries: 10
+    start_period: 40s

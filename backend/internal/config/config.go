@@ -44,7 +44,7 @@ func Load() *Config {
 		RedisHost:     getEnv("REDIS_HOST", "localhost"),
 		RedisPort:     getEnv("REDIS_PORT", "6379"),
 		RedisPassword: getEnv("REDIS_PASSWORD", ""),
-		RabbitMQURL:   getEnv("RABBITMQ_URL", "amqp://guest:guest@localhost:5672/"),
+		RabbitMQURL:   getEnv("RABBITMQ_URL", "amqp://admin:admin@localhost:5672/"),
 		AdminEmail:    getEnv("ADMIN_EMAIL", "admin@abc.com"),
 		AdminPassword: getEnv("ADMIN_PASSWORD", "Admin@123456"),
 	}

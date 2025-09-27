@@ -21,7 +21,7 @@ services:
     networks:
       - abc_network
     healthcheck:
-      test: ["CMD-SHELL", "mysqladmin ping -h localhost -u abc_user -pv12345"]
+      test: ["CMD-SHELL", "mysqladmin ping -uabc_user -pv12345 >/dev/null 2>&1 || true"]
       timeout: 20s
       retries: 10
       interval: 10s
@@ -41,6 +41,21 @@ services:
       interval: 5s
       timeout: 3s
       retries: 5
+  
+   # # RabbitMQ message broker
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: abc_rabbitmq
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin
+    ports:
+      - "5672:5672"
+      - "15672:15672"  # Management UI
+    networks:
+      - abc_network
+  
 
   # Backend API service
   backend:
@@ -60,6 +75,8 @@ services:
       DB_NAME: abc_user_management  # Fixed to match MySQL service
       REDIS_HOST: redis  # Fixed to use service name
       REDIS_PORT: 6379
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
       JWT_SECRET: your-super-secret-jwt-key-change-in-production
       ADMIN_EMAIL: admin@abc.com
       ADMIN_PASSWORD: Admin@123456
@@ -70,6 +87,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+      rabbitmq:
+        condition: service_started
     networks:
       - abc_network
 
@@ -96,21 +115,4 @@ networks:
 volumes:
   mysql_data:
 
-  # # RabbitMQ message broker
-  # rabbitmq:
-  #   image: rabbitmq:3-management
-  #   container_name: abc_rabbitmq
-  #   restart: unless-stopped
-  #   environment:
-  #     RABBITMQ_DEFAULT_USER: admin
-  #     RABBITMQ_DEFAULT_PASS: admin
-  #   ports:
-  #     - "5672:5672"
-  #     - "15672:15672"  # Management UI
-  #   networks:
-  #     - abc_network
-  #   healthcheck:
-  #     test: ["CMD", "rabbitmq-diagnostics", "ping"]
-  #     interval: 10s
-  #     timeout: 5s
-  #     retries: 5
+ 
